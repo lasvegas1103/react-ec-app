@@ -1,10 +1,15 @@
 import "./App.css";
 import { Grid } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import Header from "./components/utils/Header";
 import { BrowserRouter } from "react-router-dom";
 import Router from "./Router";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
+
+const C_Grid = styled(Grid)({
+  margin: "50px auto",
+});
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -21,17 +26,10 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Header />
-        <Grid container direction="column">
-          <Grid container>
-            <Grid sm={3} />
-            <Grid lg={6} sm={6} spacing={10}>
-              <div style={{ padding: 30 }}>
-                <Router />
-                <ReactQueryDevtools />
-              </div>
-            </Grid>
-          </Grid>
-        </Grid>
+        <C_Grid container justifyContent="center">
+          <Router />
+          <ReactQueryDevtools />
+        </C_Grid>
       </BrowserRouter>
     </QueryClientProvider>
   );

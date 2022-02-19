@@ -1,8 +1,9 @@
 import React from "react";
-import { useController, useForm } from "react-hook-form";
+import { useController } from "react-hook-form";
 import { TextField } from "@mui/material";
 
 const TextInput = (props) => {
+  const name = props.name;
   const { field } = useController({
     name: props.name,
     control: props.control,
@@ -12,19 +13,26 @@ const TextInput = (props) => {
   return (
     <TextField
       {...field}
+      id="standard-basic"
+      variant="standard"
       label={props.label}
       type={props.type}
-      rows={props.rows}
-      fullWidth
+      maxRows={props.maxRows}
+      multiline={props.multiline}
+      InputProps={{
+        endAdornment: props.endAdornment,
+      }}
+      fullWidth={props.fullWidth}
       margin="normal"
       error={
-        props.errors.title?.type === "required" ||
-        props.errors.title?.type === "maxLength"
+        props["errors"]?.[name]?.["type"] === "required" ||
+        props["errors"]?.[name]?.["type"] === "maxLength"
       }
       helperText={
-        (props.errors.title?.type === "required" &&
-          props.errors.title.message) ||
-        (props.errors.title?.type === "maxLength" && props.errors.title.message)
+        (props["errors"]?.[name]?.["type"] === "required" &&
+          props["errors"]?.[name]?.["message"]) ||
+        (props["errors"]?.[name]?.["type"] === "maxLength" &&
+          props["errors"]?.[name]?.["message"])
       }
     />
   );
