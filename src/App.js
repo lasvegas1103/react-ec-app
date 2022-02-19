@@ -20,12 +20,17 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
+        <Header />
         <Grid container direction="column">
-          <Header />
-          <div style={{ padding: 30 }}>
-            <Router />
-            <ReactQueryDevtools />
-          </div>
+          <Grid container>
+            <Grid sm={3} />
+            <Grid lg={6} sm={6} spacing={10}>
+              <div style={{ padding: 30 }}>
+                <Router />
+                <ReactQueryDevtools />
+              </div>
+            </Grid>
+          </Grid>
         </Grid>
       </BrowserRouter>
     </QueryClientProvider>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { styled } from "@mui/material/styles";
-import { Grid, Button, Snackbar, Alert, Link } from "@mui/material";
+import { Button, Snackbar, Alert, Link } from "@mui/material";
 import { useHistory } from "react-router-dom";
 import Form from "../../components/utils/Form";
 import TextInputLoginId from "../../components/utils/TextInputLoginId";
@@ -38,44 +38,41 @@ const Signin = () => {
   };
 
   return (
-    <Grid container>
-      <Grid sm={3} />
-      <Grid lg={6} sm={6} spacing={10}>
-        <div>ログイン</div>
-        <Form onSubmit={onSubmit}>
-          <TextInputLoginId name="loginId" />
-          <TextInputPassWord name="password" />
-          <Snackbar
-            open={snackStatus.open}
-            autoHideDuration={6000}
+    <>
+      <div>ログイン</div>
+      <Form onSubmit={onSubmit}>
+        <TextInputLoginId name="loginId" />
+        <TextInputPassWord name="password" />
+        <Snackbar
+          open={snackStatus.open}
+          autoHideDuration={6000}
+          onClose={handleClose}
+        >
+          <Alert
             onClose={handleClose}
+            severity={snackStatus.type}
+            sx={{ width: "100%" }}
           >
-            <Alert
-              onClose={handleClose}
-              severity={snackStatus.type}
-              sx={{ width: "100%" }}
-            >
-              {snackStatus.message}
-            </Alert>
-          </Snackbar>
-          <CustomDiv>
-            <Button variant="contained" color="primary" type="submit">
-              ログイン
-            </Button>
-          </CustomDiv>
-          <CustomDiv>
-            <Link href="/signup" underline="none">
-              登録がまだの方はこちら
-            </Link>
-          </CustomDiv>
-          <CustomDiv>
-            <Link href="/resetPassword" underline="none">
-              パスワードを忘れた方はこちら
-            </Link>
-          </CustomDiv>
-        </Form>
-      </Grid>
-    </Grid>
+            {snackStatus.message}
+          </Alert>
+        </Snackbar>
+        <CustomDiv>
+          <Button variant="contained" color="primary" type="submit">
+            ログイン
+          </Button>
+        </CustomDiv>
+        <CustomDiv>
+          <Link href="/signup" underline="none">
+            登録がまだの方はこちら
+          </Link>
+        </CustomDiv>
+        <CustomDiv>
+          <Link href="/resetPassword" underline="none">
+            パスワードを忘れた方はこちら
+          </Link>
+        </CustomDiv>
+      </Form>
+    </>
   );
 };
 
