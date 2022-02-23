@@ -2,25 +2,6 @@ import React from "react";
 import { useController } from "react-hook-form";
 import { TextField, MenuItem } from "@mui/material";
 
-const currencies = [
-  {
-    value: "S",
-    label: "S",
-  },
-  {
-    value: "M",
-    label: "M",
-  },
-  {
-    value: "L",
-    label: "L",
-  },
-  {
-    value: "XL",
-    label: "XL",
-  },
-];
-
 const TextSelect = (props) => {
   const name = props.name;
   const { field } = useController({
@@ -44,9 +25,9 @@ const TextSelect = (props) => {
         props["errors"]?.[name]?.["message"]
       }
     >
-      {currencies.map((option) => (
+      {props.currencies.map((option) => (
         <MenuItem key={option.value} value={option.value}>
-          {option.label}
+          {option.key}
         </MenuItem>
       ))}
     </TextField>
