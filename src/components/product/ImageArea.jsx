@@ -11,7 +11,6 @@ const C_input = styled("input")({
 const C_list = styled("div")({
   display: "flex",
   flexFlow: "wrap",
-  flexDirection: "row",
 });
 
 const ImageArea = (props) => {
@@ -50,7 +49,7 @@ const ImageArea = (props) => {
 
   return (
     <div>
-      <C_list>
+      <div>
         {props.images !== "" &&
           props.images?.length > 0 &&
           props.images.map((image) => (
@@ -61,7 +60,7 @@ const ImageArea = (props) => {
               delete={deleteImage}
             />
           ))}
-      </C_list>
+      </div>
       <span>画像を選択</span>
       <IconButton>
         <label>
