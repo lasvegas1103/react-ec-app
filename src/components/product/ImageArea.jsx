@@ -65,7 +65,7 @@ const ImageArea = (props) => {
       <IconButton>
         <label>
           <CameraAltIcon />
-          <C_input type="file" id="image" onChange={uploadImage} />
+          <C_input type="file" name="image" onChange={uploadImage} />
         </label>
       </IconButton>
     </div>

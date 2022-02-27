@@ -22,7 +22,6 @@ const C_IconButton = styled(IconButton)({
 });
 
 const SizeArea = (props) => {
-  const [sizes, setSizes] = useState([]);
   const [currencies, setCurrencies] = useState([
     {
       key: "S",
@@ -47,8 +46,8 @@ const SizeArea = (props) => {
     let quantity = props.getValues("quantity");
 
     // 選択していたサイズをstateに追加
-    setSizes([
-      ...sizes,
+    props.setSizes([
+      ...props.sizes,
       {
         sizeType: sizeType,
         quantity: quantity,
@@ -67,10 +66,10 @@ const SizeArea = (props) => {
 
   const handleClickDelete = (selectedSizeType) => {
     // 選択していたサイズをstateから削除
-    let newSizes = sizes.filter((size) => {
+    let newSizes = props.sizes.filter((size) => {
       return size.sizeType !== selectedSizeType;
     }, selectedSizeType);
-    setSizes(newSizes);
+    props.setSizes(newSizes);
 
     // 選択していたサイズをプルダウンに復活させる
     setCurrencies([
@@ -96,8 +95,8 @@ const SizeArea = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {sizes?.length > 0 &&
-              sizes.map((item, index) => (
+            {props.sizes?.length > 0 &&
+              props.sizes.map((item, index) => (
                 <TableRow key={item.sizeType}>
                   <TableCell component="th" scope="row">
                     {item.sizeType}
@@ -119,24 +118,20 @@ const SizeArea = (props) => {
           <TextSelect
             currencies={currencies}
             name={"sizeType"}
-            control={props.control}
             label={"サイズ"}
             fullWidth={true}
-            rules={{
-              required: "サイズを入力してください。",
-            }}
+            control={props.control}
+            rules={""}
           />
           <TextInput
             name={"quantity"}
-            control={props.control}
             label={"数量"}
             type={"number"}
             maxRows={1}
             multiline={false}
             fullWidth={true}
-            rules={{
-              required: "数量を入力してください。",
-            }}
+            control={props.control}
+            rules={""}
           />
         </div>
         <C_IconButton onClick={handleClickAdd}>
