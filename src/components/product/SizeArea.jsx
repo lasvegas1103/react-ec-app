@@ -3,9 +3,7 @@ import TextInput from "./TextInput";
 import TextSelect from "./TextSelect";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
-import EditIcon from "@mui/icons-material/Edit";
 import { styled } from "@mui/material/styles";
-
 import {
   Table,
   TableBody,
@@ -17,6 +15,9 @@ import {
   IconButton,
 } from "@mui/material";
 
+const C_sizeArea = styled("div")({
+  padding: "1rem 0 1rem 0",
+});
 const C_IconButton = styled(IconButton)({
   float: "right",
 });
@@ -82,7 +83,7 @@ const SizeArea = (props) => {
   };
 
   return (
-    <div aria-label="サイズ展開">
+    <C_sizeArea aria-label="サイズ展開">
       <TableContainer component={Paper}>
         <Table aria-label="caption table">
           <TableHead>
@@ -138,7 +139,7 @@ const SizeArea = (props) => {
           <CheckCircleIcon />
         </C_IconButton>
       </TableContainer>
-    </div>
+    </C_sizeArea>
   );
 };
 

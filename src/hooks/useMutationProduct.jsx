@@ -1,17 +1,16 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
-import { auth, db, FirebaseTimeStamp } from "../firebase/index";
+import { db, FirebaseTimeStamp } from "../firebase/index";
 
 const useMutationProduct = () => {
   const queryClient = useQueryClient();
   const [productData, setProductData] = useState([]);
   const [isSuccess, setIsSuccess] = useState(false);
-  const productsRef = db.collection("product");
+  const productsRef = db.collection("products");
 
+  // 商品の登録
   const saveProductAction = (props) => {
     const timestamp = FirebaseTimeStamp.now();
-    console.log("fff");
-    console.log(props);
     const data = {
       id: productsRef.doc().id,
       title: props.title,
@@ -42,6 +41,7 @@ const useMutationProduct = () => {
   const saveProduct = useMutation((props) => saveProductAction(props), {
     onSuccess: (res) => {
       if (res.isSuccess)
+        // 必要？？
         queryClient.setQueryDate("productData", res.productData);
     },
   });

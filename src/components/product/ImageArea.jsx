@@ -8,9 +8,9 @@ const C_input = styled("input")({
   display: "none",
 });
 
-const C_list = styled("div")({
-  display: "flex",
-  flexFlow: "wrap",
+const C_imageArea = styled("div")({
+  padding: "1rem 0 1rem 0",
+  textAlign: "right",
 });
 
 const ImageArea = (props) => {
@@ -48,7 +48,7 @@ const ImageArea = (props) => {
   };
 
   return (
-    <div>
+    <C_imageArea>
       <div>
         {props.images !== "" &&
           props.images?.length > 0 &&
@@ -68,7 +68,7 @@ const ImageArea = (props) => {
           <C_input type="file" name="image" onChange={uploadImage} />
         </label>
       </IconButton>
-    </div>
+    </C_imageArea>
   );
 };
 

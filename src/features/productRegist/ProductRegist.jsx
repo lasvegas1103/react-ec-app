@@ -8,15 +8,6 @@ import ImageArea from "../../components/product/ImageArea";
 import { Button, InputAdornment, Snackbar, Alert } from "@mui/material";
 import useMutationProduct from "../../hooks/useMutationProduct";
 
-const C_sizeArea = styled("div")({
-  padding: "1rem 0 1rem 0",
-});
-
-const C_imageArea = styled("div")({
-  padding: "1rem 0 1rem 0",
-  textAlign: "right",
-});
-
 const C_container = styled("div")({
   margin: "0 auto",
   maxWidth: "400px",
