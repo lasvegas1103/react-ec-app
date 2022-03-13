@@ -7,6 +7,8 @@ import SizeArea from "../../components/product/SizeArea";
 import ImageArea from "../../components/product/ImageArea";
 import { Button, InputAdornment, Snackbar, Alert } from "@mui/material";
 import useMutationProduct from "../../hooks/useMutationProduct";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const C_container = styled("div")({
   margin: "0 auto",
@@ -50,27 +52,11 @@ const ProductRegist = () => {
   const { saveProduct } = useMutationProduct();
   const [images, setImages] = useState([]);
   const [sizes, setSizes] = useState([]);
-  const [snackStatus, setSnackStatus] = useState({
-    open: false,
-    type: "",
-    message: "",
-  });
-
-  const handleClose = (event, reason) => {
-    if (reason === "clickway") {
-      return;
-    }
-    setSnackStatus({ ...snackStatus, open: false });
-  };
 
   const onSubmit = (data) => {
     // サイズが選択されているかどうか
     if (sizes.length === 0) {
-      setSnackStatus({
-        open: true,
-        type: "error",
-        message: "サイズが選択されていません。",
-      });
+      toast.error("サイズが選択されていません");
       return;
     }
 
@@ -78,10 +64,14 @@ const ProductRegist = () => {
     data.images = images;
     saveProduct.mutate(data, {
       onSuccess: (res) => {},
+      onError: (res) => {
+        toast.error("商品の登録に失敗しました");
+      },
     });
   };
   return (
     <C_container>
+      <ToastContainer />
       <C_title>商品登録</C_title>
       <Form onSubmit={onSubmit}>
         <TextInput
@@ -146,20 +136,6 @@ const ProductRegist = () => {
         />
         <SizeArea name={"sizes"} sizes={sizes} setSizes={setSizes} />
         <ImageArea name={"image"} images={images} setImages={setImages} />
-
-        <Snackbar
-          open={snackStatus.open}
-          autoHideDuration={6000}
-          onClose={handleClose}
-        >
-          <Alert
-            onClose={handleClose}
-            severity={snackStatus.type}
-            sx={{ width: "100%" }}
-          >
-            {snackStatus.message}
-          </Alert>
-        </Snackbar>
 
         <Button variant="contained" color="primary" type="submit">
           商品を登録

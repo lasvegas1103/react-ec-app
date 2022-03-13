@@ -7,27 +7,17 @@ import TextInputPassWord from "../../components/utils/TextInputPassWord";
 import TextInputPassWordConfirm from "../../components/utils/TextInputPassWordConfirm";
 import TextInputName from "../../components/utils/TextInputName";
 import useMutationUserData from "../../hooks/useMutationUserData";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Signup = () => {
   const history = useHistory();
   const { signup } = useMutationUserData();
-  const [snackStatus, setSnackStatus] = useState({
-    open: false,
-    type: "",
-    message: "",
-  });
-
-  const handleClose = (event, reason) => {
-    if (reason === "clickway") {
-      return;
-    }
-    setSnackStatus({ ...snackStatus, open: false });
-  };
 
   const onSubmit = (data) => {
     signup.mutate(data, {
       onSuccess: (res) => {
-        if (res.snackStatus) setSnackStatus(res.snackStatus);
+        if (res.snackStatus) toast.success(res.snackStatus);
       },
     });
   };
@@ -40,19 +30,6 @@ const Signup = () => {
         <TextInputLoginId name="loginId" />
         <TextInputPassWord name="password" />
         <TextInputPassWordConfirm name="passwordConfirm" />
-        <Snackbar
-          open={snackStatus.open}
-          autoHideDuration={6000}
-          onClose={handleClose}
-        >
-          <Alert
-            onClose={handleClose}
-            severity={snackStatus.type}
-            sx={{ width: "100%" }}
-          >
-            {snackStatus.message}
-          </Alert>
-        </Snackbar>
         <Button variant="contained" color="primary" type="submit">
           登録
         </Button>

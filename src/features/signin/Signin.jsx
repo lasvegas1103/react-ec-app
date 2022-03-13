@@ -6,6 +6,8 @@ import Form from "../../components/utils/Form";
 import TextInputLoginId from "../../components/utils/TextInputLoginId";
 import TextInputPassWord from "../../components/utils/TextInputPassWord";
 import useMutationUserData from "../../hooks/useMutationUserData";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const CustomDiv = styled("div")({
   textAlign: "center",
@@ -15,24 +17,12 @@ const CustomDiv = styled("div")({
 const Signin = () => {
   const history = useHistory();
   const { signin } = useMutationUserData();
-  const [snackStatus, setSnackStatus] = useState({
-    open: false,
-    type: "",
-    message: "",
-  });
-
-  const handleClose = (event, reason) => {
-    if (reason === "clickway") {
-      return;
-    }
-    setSnackStatus({ ...snackStatus, open: false });
-  };
 
   const onSubmit = (data) => {
     signin.mutate(data, {
       onSuccess: (res) => {
         console.log(res);
-        if (res.snackStatus) setSnackStatus(res.snackStatus);
+        if (res.snackStatus) toast.success(res.snackStatus);
       },
     });
   };
@@ -43,19 +33,6 @@ const Signin = () => {
       <Form onSubmit={onSubmit}>
         <TextInputLoginId name="loginId" />
         <TextInputPassWord name="password" />
-        <Snackbar
-          open={snackStatus.open}
-          autoHideDuration={6000}
-          onClose={handleClose}
-        >
-          <Alert
-            onClose={handleClose}
-            severity={snackStatus.type}
-            sx={{ width: "100%" }}
-          >
-            {snackStatus.message}
-          </Alert>
-        </Snackbar>
         <CustomDiv>
           <Button variant="contained" color="primary" type="submit">
             ログイン
