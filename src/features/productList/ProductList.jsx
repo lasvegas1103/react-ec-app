@@ -1,4 +1,5 @@
 import React from "react";
+import useInfiniteQueryProductList from "../../hooks/useInfiniteQueryProductList";
 import { styled } from "@mui/material/styles";
 import {
   Card,
@@ -21,6 +22,8 @@ const C_margin = styled("div")({
 });
 
 const ProductList = () => {
+  const test = useInfiniteQueryProductList();
+
   return (
     <Grid container spacing={2}>
       <Grid sm={2} />
