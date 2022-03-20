@@ -11,7 +11,6 @@ import {
 
 const useInfiniteQueryProductList = () => {
   const getProductList = async (props) => {
-    console.log(props.pageParam);
     const productRef = query(
       collection(db, "products"),
       orderBy("update_at"),
@@ -30,19 +29,20 @@ const useInfiniteQueryProductList = () => {
     return { productData, lastVisible };
   };
 
-  const getProductListAction = ({ pageParam = 0 }) => {
-    const { productData, lastVisible } = getProductList({ pageParam });
+  const getProductListAction = async ({ pageParam = 0 }) => {
+    const { productData, lastVisible } = await getProductList({ pageParam });
 
     return { productData, nextPage: lastVisible };
   };
 
-  const { data } = useInfiniteQuery("productList", getProductListAction, {
-    getNextPageParam: (lastPage, page) => {
-      // if(lastPage.)
-    },
-  });
+  const { data, isLoading, isError, hasNextPage, fetchNextPage } =
+    useInfiniteQuery("productList", getProductListAction, {
+      getNextPageParam: (lastPage) => {
+        return lastPage.nextPage ?? undefined;
+      },
+    });
 
-  return { data };
+  return { data, isLoading, isError, hasNextPage, fetchNextPage };
 };
 
 export default useInfiniteQueryProductList;
