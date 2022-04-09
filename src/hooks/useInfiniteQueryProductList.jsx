@@ -15,9 +15,10 @@ const useInfiniteQueryProductList = () => {
       collection(db, "products"),
       orderBy("update_at"),
       startAfter(props.pageParam),
-      limit("2")
+      limit("9")
     );
     const docSnapShot = await getDocs(productRef);
+
     // クエリカーソルに使用
     const lastVisible = docSnapShot.docs[docSnapShot.docs.length - 1];
 
@@ -35,14 +36,27 @@ const useInfiniteQueryProductList = () => {
     return { productData, nextPage: lastVisible };
   };
 
-  const { data, isLoading, isError, hasNextPage, fetchNextPage } =
-    useInfiniteQuery("productList", getProductListAction, {
-      getNextPageParam: (lastPage) => {
-        return lastPage.nextPage ?? undefined;
-      },
-    });
+  const {
+    data,
+    isLoading,
+    isError,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+  } = useInfiniteQuery("productList", getProductListAction, {
+    getNextPageParam: (lastPage) => {
+      return lastPage.nextPage ?? undefined;
+    },
+  });
 
-  return { data, isLoading, isError, hasNextPage, fetchNextPage };
+  return {
+    data,
+    isLoading,
+    isError,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+  };
 };
 
 export default useInfiniteQueryProductList;

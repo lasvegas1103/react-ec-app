@@ -8,7 +8,7 @@ import {
 
 const ProductCard = (props) => {
   const productData = props.productData;
-  console.log(productData);
+
   return (
     <Card>
       <CardActionArea>

@@ -12,8 +12,8 @@ const Router = () => {
   return (
     <Switch>
       <Auth>
-        <Route exact path="/products/list" component={ProductList} />
-        <Route exact path="/products/regist" component={ProductRegist} />
+        <Route exact path="/product/list" component={ProductList} />
+        <Route exact path="/product/regist" component={ProductRegist} />
         <Route exact path="/signup" component={Signup} />
         <Route exact path="/signin" component={Signin} />
       </Auth>

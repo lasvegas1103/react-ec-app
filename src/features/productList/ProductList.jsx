@@ -1,31 +1,20 @@
-import React from "react";
-import InfiniteScroll from "react-infinite-scroller";
+import React, { useEffect } from "react";
+import { useInView } from "react-intersection-observer";
 import useInfiniteQueryProductList from "../../hooks/useInfiniteQueryProductList";
 import ProductCard from "../../components/product/ProductCard";
-import { styled } from "@mui/material/styles";
 import { Grid } from "@mui/material";
 
-const C_produtList = styled("div")({
-  display: "flex",
-  maxWidth: "100%",
-});
-
-const C_margin = styled("div")({
-  margin: "1rem",
-});
-
 const ProductList = () => {
-  const { data, hasNextPage, fetchNextPage } = useInfiniteQueryProductList();
-  console.log(data);
-  console.log(hasNextPage);
+  const { ref, inView } = useInView();
+  const { data, isFetchingNextPage, hasNextPage, fetchNextPage } =
+    useInfiniteQueryProductList();
+
+  useEffect(() => {
+    if (inView && hasNextPage) fetchNextPage();
+  }, [inView]);
 
   return (
-    <InfiniteScroll
-      hasMore={hasNextPage}
-      loader={<h4>Loading...</h4>}
-      loadMore={fetchNextPage}
-      useWindow={false}
-    >
+    <div>
       <Grid container spacing={2}>
         {data?.pages &&
           data.pages.map((page) =>
@@ -36,7 +25,8 @@ const ProductList = () => {
             ))
           )}
       </Grid>
-    </InfiniteScroll>
+      <div ref={ref}>{isFetchingNextPage && "Loading..."}</div>
+    </div>
   );
 };
 
