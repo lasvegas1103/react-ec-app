@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
-import { auth, db } from "../firebase/index";
+import { auth } from "../firebase/index";
 
 const useQueryAuth = () => {
   const history = useHistory();

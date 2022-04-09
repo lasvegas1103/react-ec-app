@@ -6,6 +6,7 @@ import {
   Signin,
   ProductList,
   ProductRegist,
+  ProductDetail,
 } from "./features/index";
 
 const Router = () => {
@@ -14,6 +15,7 @@ const Router = () => {
       <Auth>
         <Route exact path="/product/list" component={ProductList} />
         <Route exact path="/product/regist" component={ProductRegist} />
+        <Route exact path="/product/detail" component={ProductDetail} />
         <Route exact path="/signup" component={Signup} />
         <Route exact path="/signin" component={Signin} />
       </Auth>
