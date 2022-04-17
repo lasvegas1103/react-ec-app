@@ -10,7 +10,7 @@ import useMutationProduct from "../../hooks/useMutationProduct";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const C_container = styled("div")({
+const c_container = styled("div")({
   margin: "0 auto",
   maxWidth: "400px",
   padding: "1rem",
@@ -18,7 +18,7 @@ const C_container = styled("div")({
   width: "calc(100% - 2rem)",
 });
 
-const C_title = styled("div")({
+const c_title = styled("div")({
   textAlign: "center",
   fontSize: "1rem",
 });
@@ -70,9 +70,9 @@ const ProductRegist = () => {
     });
   };
   return (
-    <C_container>
+    <c_container>
       <ToastContainer />
-      <C_title>商品登録</C_title>
+      <c_title>商品登録</c_title>
       <Form onSubmit={onSubmit}>
         <TextInput
           name={"title"}
@@ -141,7 +141,7 @@ const ProductRegist = () => {
           商品を登録
         </Button>
       </Form>
-    </C_container>
+    </c_container>
   );
 };
 

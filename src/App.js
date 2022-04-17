@@ -6,8 +6,9 @@ import { BrowserRouter } from "react-router-dom";
 import Router from "./Router";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
+import { UtilProvider } from "./context/UtilContext";
 
-const C_Grid = styled(Grid)({
+const Cgrid = styled(Grid)({
   margin: "50px auto",
 });
 
@@ -26,10 +27,12 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Header />
-        <C_Grid container justifyContent="center">
-          <Router />
+        <Cgrid container justifyContent="center">
+          <UtilProvider>
+            <Router />
+          </UtilProvider>
           <ReactQueryDevtools />
-        </C_Grid>
+        </Cgrid>
       </BrowserRouter>
     </QueryClientProvider>
   );
