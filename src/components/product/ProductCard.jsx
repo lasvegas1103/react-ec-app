@@ -10,7 +10,10 @@ const ProductCard = (props) => {
   const productData = props.productData;
 
   return (
-    <Card>
+    <Card
+      sx={{ maxWidth: 350, minWidth: 150 }}
+      s={{ maxWidth: 350, minWidth: 150 }}
+    >
       <CardActionArea>
         <CardMedia
           component="img"

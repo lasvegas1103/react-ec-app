@@ -5,12 +5,12 @@ import TextInput from "../../components/product/TextInput";
 import TextSelect from "../../components/product/TextSelect";
 import SizeArea from "../../components/product/SizeArea";
 import ImageArea from "../../components/product/ImageArea";
-import { Button, InputAdornment, Snackbar, Alert } from "@mui/material";
+import { Button, InputAdornment } from "@mui/material";
 import useMutationProduct from "../../hooks/useMutationProduct";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const c_container = styled("div")({
+const Ccontainer = styled("div")({
   margin: "0 auto",
   maxWidth: "400px",
   padding: "1rem",
@@ -18,7 +18,7 @@ const c_container = styled("div")({
   width: "calc(100% - 2rem)",
 });
 
-const c_title = styled("div")({
+const Ctitle = styled("div")({
   textAlign: "center",
   fontSize: "1rem",
 });
@@ -69,10 +69,11 @@ const ProductRegist = () => {
       },
     });
   };
+
   return (
-    <c_container>
+    <Ccontainer>
       <ToastContainer />
-      <c_title>商品登録</c_title>
+      <Ctitle>商品登録</Ctitle>
       <Form onSubmit={onSubmit}>
         <TextInput
           name={"title"}
@@ -141,7 +142,7 @@ const ProductRegist = () => {
           商品を登録
         </Button>
       </Form>
-    </c_container>
+    </Ccontainer>
   );
 };
 

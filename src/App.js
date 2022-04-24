@@ -9,7 +9,7 @@ import { ReactQueryDevtools } from "react-query/devtools";
 import { UtilProvider } from "./context/UtilContext";
 
 const Cgrid = styled(Grid)({
-  margin: "50px auto",
+  margin: "3rem 1rem 1rem 2rem",
 });
 
 const queryClient = new QueryClient({

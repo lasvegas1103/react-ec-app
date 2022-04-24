@@ -3,19 +3,32 @@ import { styled } from "@mui/material/styles";
 import { IconButton } from "@mui/material";
 import { storage } from "../../firebase";
 import ImagePreview from "./ImagePreview";
+import ResizeFile from "../../components/utils/ResizeFile";
 
-const C_input = styled("input")({
+const Cinput = styled("input")({
   display: "none",
 });
 
-const C_imageArea = styled("div")({
+const CimageArea = styled("div")({
   padding: "1rem 0 1rem 0",
   textAlign: "right",
 });
 
 const ImageArea = (props) => {
-  const uploadImage = (event) => {
-    const file = event.target.files;
+  const uploadImage = async (event) => {
+    const file = event.target.files[0];
+
+    // // 画像リサイズ
+    // let blob = await ResizeFile({
+    //   file: file,
+    //   maxWidth: 300,
+    //   maxHeight: 300,
+    //   compressFormat: "JPEG",
+    //   quality: 100,
+    //   rotation: 0,
+    //   outputType: "blob",
+    // });
+    // console.log(blob);
     let blob = new Blob(file, { type: "image/jpeg" });
 
     // Generate random 16 digits strings
@@ -48,7 +61,7 @@ const ImageArea = (props) => {
   };
 
   return (
-    <C_imageArea>
+    <CimageArea>
       <div>
         {props.images !== "" &&
           props.images?.length > 0 &&
@@ -65,10 +78,10 @@ const ImageArea = (props) => {
       <IconButton>
         <label>
           <CameraAltIcon />
-          <C_input type="file" name="image" onChange={uploadImage} />
+          <Cinput type="file" name="image" onChange={uploadImage} />
         </label>
       </IconButton>
-    </C_imageArea>
+    </CimageArea>
   );
 };
 

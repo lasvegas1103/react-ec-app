@@ -15,7 +15,7 @@ const ProductList = () => {
 
   return (
     <div>
-      <Grid container spacing={2}>
+      <Grid container spacing={3}>
         {data?.pages &&
           data.pages.map((page) =>
             page.productData.map((d) => (
