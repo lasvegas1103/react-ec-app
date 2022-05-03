@@ -6,8 +6,8 @@ import { useUtilContext } from "../context/UtilContext";
 /* 商品詳細画面で必要な情報を取得 */
 const useQueryProduct = (props) => {
   const { toast } = useUtilContext();
-  const getProductDetail = async (docId) => {
-    const productRef = doc(db, "products", docId);
+  const getProductDetail = async (productId) => {
+    const productRef = doc(db, "products", productId);
     const docSnap = await getDoc(productRef);
 
     if (docSnap.exists()) {
@@ -21,7 +21,7 @@ const useQueryProduct = (props) => {
   const fetchProductDetail = useQueryWrapper({
     queryKey: "productDetail",
     deps: [],
-    func: () => getProductDetail(props.id),
+    func: () => getProductDetail(props.productId),
     options: { staleTime: 1000 * 60 },
   });
 
