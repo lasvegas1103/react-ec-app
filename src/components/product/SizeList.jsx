@@ -5,8 +5,7 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import Button from "@mui/material/Button";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import AddCartButton from "./AddCartButton";
 
 /* 商品詳細画面-サイズ一覧 */
 const SizeList = (props) => {
@@ -29,13 +28,7 @@ const SizeList = (props) => {
                       {size.sizeType} / 在庫あり
                     </TableCell>
                     <TableCell align="right">
-                      <Button
-                        variant="contained"
-                        color="info"
-                        startIcon={<ShoppingCartIcon />}
-                      >
-                        カートに入れる
-                      </Button>
+                      <AddCartButton>カートに入れる</AddCartButton>
                     </TableCell>
                   </>
                 ) : (

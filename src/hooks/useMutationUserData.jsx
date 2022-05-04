@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { auth, db, FirebaseTimeStamp } from "../firebase/index";
+import { doc, collection, setDoc } from "firebase/firestore";
 
 const useMutationUserData = () => {
   const queryClient = useQueryClient();
@@ -93,6 +94,25 @@ const useMutationUserData = () => {
     return { userData, snackStatus, isSuccess };
   };
 
+  // カートに入れる処理
+  const addCartAction = (addCartData) => {
+    let isSuccess = false;
+
+    // userFavoriteに登録
+    const userFavoriteRef = collection(
+      db,
+      "users",
+      addCartData.uid,
+      "userCart"
+    );
+    setDoc(doc(userFavoriteRef), addCartData);
+    isSuccess = true;
+
+    return { isSuccess, addCartData };
+  };
+
+  //////////////////////////////////////////////////////////
+
   // useMutationを使ってユーザーデータ登録・セット
   const signup = useMutation((props) => signupAction(props), {
     onSuccess: (res) => {
@@ -107,7 +127,22 @@ const useMutationUserData = () => {
     },
   });
 
-  return { signup, signin };
+  // カートに入れる
+  const addCart = useMutation((addCartData) => addCartAction(addCartData), {
+    onMutate: async () => {
+      await queryClient.cancelQueries("userCart");
+
+      const previousValue = queryClient.getQueryData("userCart");
+      queryClient.setQueryData("userCart", (oldCnt) => (oldCnt ? oldCnt++ : 0));
+
+      return previousValue;
+    },
+    onError: (err, variables, previousValue) =>
+      queryClient.setQueryData("userCart", previousValue),
+    onSettled: () => queryClient.invalidateQueries("userCart"),
+  });
+
+  return { signup, signin, addCart };
 };
 
 export default useMutationUserData;
