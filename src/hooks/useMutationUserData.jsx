@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { auth, db, FirebaseTimeStamp } from "../firebase/index";
 import { doc, collection, setDoc } from "firebase/firestore";
+import { CacheName } from "../config/constants";
 
 const useMutationUserData = () => {
   const queryClient = useQueryClient();
@@ -94,21 +95,33 @@ const useMutationUserData = () => {
     return { userData, snackStatus, isSuccess };
   };
 
-  // カートに入れる処理
+  // カートに入れる詳細
   const addCartAction = (addCartData) => {
     let isSuccess = false;
 
-    // userFavoriteに登録
-    const userFavoriteRef = collection(
-      db,
-      "users",
-      addCartData.uid,
-      "userCart"
-    );
-    setDoc(doc(userFavoriteRef), addCartData);
+    // userCartに登録
+    const userCartRef = collection(db, "users", addCartData.uid, "userCart");
+    setDoc(doc(userCartRef), addCartData);
     isSuccess = true;
 
     return { isSuccess, addCartData };
+  };
+
+  //お気に入りに追加詳細
+  const addFavoriteAction = (addFavoriteData) => {
+    let isSuccess = false;
+
+    // userFavoriteに登録
+    const UserFavoriteRef = collection(
+      db,
+      "users",
+      addFavoriteData.uid,
+      "userFavorite"
+    );
+    setDoc(doc(UserFavoriteRef), addFavoriteData);
+
+    isSuccess = true;
+    return { isSuccess, addFavoriteData };
   };
 
   //////////////////////////////////////////////////////////
@@ -116,33 +129,59 @@ const useMutationUserData = () => {
   // useMutationを使ってユーザーデータ登録・セット
   const signup = useMutation((props) => signupAction(props), {
     onSuccess: (res) => {
-      if (res.isSuccess) queryClient.setQueryData("userData", res.userData);
+      if (res.isSuccess)
+        queryClient.setQueryData(CacheName.USERDATA, res.userData);
     },
   });
 
   // サインイン処理
   const signin = useMutation((props) => signinAction(props), {
     onSuccess: (res) => {
-      if (res.isSuccess) queryClient.setQueryData("userData", res.userData);
+      if (res.isSuccess)
+        queryClient.setQueryData(CacheName.USERDATA, res.userData);
     },
   });
 
   // カートに入れる
   const addCart = useMutation((addCartData) => addCartAction(addCartData), {
     onMutate: async () => {
-      await queryClient.cancelQueries("userCart");
+      await queryClient.cancelQueries(CacheName.USERCARTCNT);
 
-      const previousValue = queryClient.getQueryData("userCart");
-      queryClient.setQueryData("userCart", (oldCnt) => (oldCnt ? oldCnt++ : 0));
+      const previousValue = queryClient.getQueryData(CacheName.USERCARTCNT);
+      queryClient.setQueryData(CacheName.USERCARTCNT, (old) =>
+        old !== undefined ? ++old : 0
+      );
 
-      return previousValue;
+      return previousValue !== undefined ? previousValue : 0;
     },
     onError: (err, variables, previousValue) =>
-      queryClient.setQueryData("userCart", previousValue),
-    onSettled: () => queryClient.invalidateQueries("userCart"),
+      queryClient.setQueryData(CacheName.USERCARTCNT, previousValue),
+    onSettled: () => queryClient.invalidateQueries(CacheName.USERCARTCNT),
   });
 
-  return { signup, signin, addCart };
+  // お気に入りに追加
+  const addFavorite = useMutation(
+    (addFavoriteData) => addFavoriteAction(addFavoriteData),
+    {
+      onMutate: async () => {
+        await queryClient.cancelQueries(CacheName.USERFAVORITECNT);
+
+        const previousValue = queryClient.getQueryData(
+          CacheName.USERFAVORITECNT
+        );
+        queryClient.setQueryData(CacheName.USERFAVORITECNT, (old) =>
+          old !== undefined ? ++old : 0
+        );
+
+        return previousValue !== undefined ? previousValue : 0;
+      },
+      onError: (err, variables, previousValue) =>
+        queryClient.setQueryData(CacheName.USERCARTCNT, previousValue),
+      onSettled: () => queryClient.invalidateQueries(CacheName.USERCARTCNT),
+    }
+  );
+
+  return { signup, signin, addCart, addFavorite };
 };
 
 export default useMutationUserData;

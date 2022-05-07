@@ -6,12 +6,13 @@ import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import AddCartButton from "./AddCartButton";
+import AddFavoriteButton from "./AddFavoriteButton";
 
 /* 商品詳細画面-サイズ一覧 */
 const SizeList = (props) => {
   return (
     <TableContainer
-      sx={{ width: "20rem", height: "100%", boxShadow: 0 }}
+      sx={{ width: "25rem", height: "100%", boxShadow: 0 }}
       component={Paper}
     >
       <Table sx={{ width: "100%" }} aria-label="simple table">
@@ -27,8 +28,11 @@ const SizeList = (props) => {
                     <TableCell component="th" scope="row">
                       {size.sizeType} / 在庫あり
                     </TableCell>
-                    <TableCell align="right">
+                    <TableCell>
                       <AddCartButton>カートに入れる</AddCartButton>
+                    </TableCell>
+                    <TableCell align="left">
+                      <AddFavoriteButton />
                     </TableCell>
                   </>
                 ) : (

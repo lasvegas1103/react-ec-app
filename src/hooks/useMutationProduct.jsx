@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { db, FirebaseTimeStamp } from "../firebase/index";
+import { CacheName } from "../config/constants";
 
 const useMutationProduct = () => {
   const queryClient = useQueryClient();
@@ -42,7 +43,7 @@ const useMutationProduct = () => {
     onSuccess: (res) => {
       if (res.isSuccess)
         // 必要？？
-        queryClient.setQueryDate("productData", res.productData);
+        queryClient.setQueryDate(CacheName.PRODUCTDATA, res.productData);
     },
   });
 

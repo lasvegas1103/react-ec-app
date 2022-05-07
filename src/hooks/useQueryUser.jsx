@@ -4,10 +4,12 @@ import useQueryWrapper from "./useQueryWrapper";
 import { useUtilContext } from "../context/UtilContext";
 import { CacheName } from "../config/constants";
 
-/* 商品詳細画面で必要な情報を取得 */
-const useQueryProduct = (props) => {
+/* ユーザーの必要な情報を取得 */
+const useQueryUser = (props) => {
   const { toast } = useUtilContext();
-  const getProductDetail = async (productId) => {
+
+  // 商品詳細画面でお気に入り情報取得
+  const getUserFavoriteAction = async (productId) => {
     const productRef = doc(db, "products", productId);
     const docSnap = await getDoc(productRef);
 
@@ -19,14 +21,14 @@ const useQueryProduct = (props) => {
     }
   };
 
-  const fetchProductDetail = useQueryWrapper({
-    queryKey: CacheName.PRODUCTDETAIL,
+  const getUserFavorite = useQueryWrapper({
+    queryKey: CacheName.USERFAVORITE,
     deps: [],
-    func: () => getProductDetail(props.productId),
+    func: () => getUserFavoriteAction(props.productId),
     options: { staleTime: 1000 * 60 },
   });
 
-  return { fetchProductDetail };
+  return { getUserFavorite };
 };
 
-export default useQueryProduct;
+export default useQueryUser;
