@@ -1,7 +1,14 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { auth, db, FirebaseTimeStamp } from "../firebase/index";
-import { doc, collection, setDoc } from "firebase/firestore";
+import {
+  doc,
+  collection,
+  setDoc,
+  updateDoc,
+  arrayUnion,
+  getDoc,
+} from "firebase/firestore";
 import { CacheName } from "../config/constants";
 
 const useMutationUserData = () => {
@@ -108,17 +115,28 @@ const useMutationUserData = () => {
   };
 
   //お気に入りに追加詳細
-  const addFavoriteAction = (addFavoriteData) => {
+  const addFavoriteAction = async (addFavoriteData) => {
     let isSuccess = false;
 
     // userFavoriteに登録
-    const UserFavoriteRef = collection(
+    const UserFavoriteRef = doc(
       db,
       "users",
       addFavoriteData.uid,
-      "userFavorite"
+      "userFavorite",
+      addFavoriteData.uid
     );
-    setDoc(doc(UserFavoriteRef), addFavoriteData);
+    const docSnap = await getDoc(UserFavoriteRef);
+
+    if (docSnap.exists()) {
+      console.log(addFavoriteData.sizeType);
+      // すでにデータが存在する場合、sizeTypeだけ追加
+      await updateDoc(UserFavoriteRef, {
+        sizType: arrayUnion(addFavoriteData.sizeType),
+      });
+    } else {
+      await setDoc(UserFavoriteRef, addFavoriteData);
+    }
 
     isSuccess = true;
     return { isSuccess, addFavoriteData };
@@ -149,7 +167,7 @@ const useMutationUserData = () => {
 
       const previousValue = queryClient.getQueryData(CacheName.USERCARTCNT);
       queryClient.setQueryData(CacheName.USERCARTCNT, (old) =>
-        old !== undefined ? ++old : 0
+        old !== undefined ? ++old : 1
       );
 
       return previousValue !== undefined ? previousValue : 0;
@@ -170,7 +188,7 @@ const useMutationUserData = () => {
           CacheName.USERFAVORITECNT
         );
         queryClient.setQueryData(CacheName.USERFAVORITECNT, (old) =>
-          old !== undefined ? ++old : 0
+          old !== undefined ? ++old : 1
         );
 
         return previousValue !== undefined ? previousValue : 0;

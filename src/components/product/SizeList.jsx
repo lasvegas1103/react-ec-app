@@ -32,7 +32,9 @@ const SizeList = (props) => {
                       <AddCartButton>カートに入れる</AddCartButton>
                     </TableCell>
                     <TableCell align="left">
-                      <AddFavoriteButton />
+                      <AddFavoriteButton
+                        productData={{ sizeType: size.sizeType }}
+                      />
                     </TableCell>
                   </>
                 ) : (

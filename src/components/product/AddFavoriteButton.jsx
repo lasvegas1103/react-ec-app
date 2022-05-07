@@ -3,21 +3,30 @@ import { pink, grey } from "@mui/material/colors";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { useQueryClient } from "react-query";
 import useMutationUserData from "../../hooks/useMutationUserData";
+import { CacheName } from "../../config/constants";
 
 /* お気に入り追加ボタン */
-const AddFavoriteButton = () => {
+const AddFavoriteButton = ({ productData }) => {
   const queryClient = useQueryClient();
+  const currentFavoriteData = queryClient.getQueryData(CacheName.USERFAVORITE);
   const { addFavorite } = useMutationUserData();
-  const [isFavorite, setIsFavorite] = useState(false);
+  // すでにお気に入りに追加しているか
+  const [isFavorite, setIsFavorite] = useState(
+    currentFavoriteData.sizeType.includes(productData.sizeType)
+  );
 
   const handleAddFavorite = () => {
+    // すでにお気に入りに追加されている場合、処理しない
+    if (isFavorite) return false;
+
     // uid、productId取得
-    const { uid } = queryClient.getQueryData("loginData");
-    const { id } = queryClient.getQueryData("productDetail");
+    const { uid } = queryClient.getQueryData(CacheName.LOGINDATA);
+    const { id } = queryClient.getQueryData(CacheName.PRODUCTDETAIL);
 
     const addFavoriteData = {
       uid: uid,
       productId: id,
+      sizeType: productData.sizeType,
     };
     if (uid)
       addFavorite.mutate(addFavoriteData, {
@@ -32,7 +41,7 @@ const AddFavoriteButton = () => {
     <FavoriteIcon
       fontSize="large"
       sx={{ color: isFavorite ? pink[500] : grey[500] }}
-      onclick={handleAddFavorite}
+      onClick={handleAddFavorite}
     />
   );
 };
