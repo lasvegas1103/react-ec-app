@@ -1,6 +1,5 @@
-import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
-import { Button, Snackbar, Alert } from "@mui/material";
+import React from "react";
+import { Button } from "@mui/material";
 import Form from "../../components/utils/Form";
 import TextInputLoginId from "../../components/utils/TextInputLoginId";
 import TextInputPassWord from "../../components/utils/TextInputPassWord";
@@ -11,13 +10,12 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const Signup = () => {
-  const history = useHistory();
   const { signup } = useMutationUserData();
 
   const onSubmit = (data) => {
     signup.mutate(data, {
       onSuccess: (res) => {
-        if (res.snackStatus) toast.success(res.snackStatus);
+        if (res.isSuccess) toast.success(res.isSuccess);
       },
     });
   };
@@ -25,6 +23,7 @@ const Signup = () => {
   return (
     <>
       <div>会員登録</div>
+      <ToastContainer />
       <Form onSubmit={onSubmit}>
         <TextInputName name="username" />
         <TextInputLoginId name="loginId" />

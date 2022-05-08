@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useMutation, useQueryClient } from "react-query";
+import { useQueryClient } from "react-query";
 import { auth, db, FirebaseTimeStamp } from "../firebase/index";
 import {
   doc,
@@ -9,12 +9,12 @@ import {
   arrayUnion,
   getDoc,
 } from "firebase/firestore";
+import useMutationWrapper from "./useMutationWrapper";
 import { CacheName } from "../config/constants";
 
 const useMutationUserData = () => {
   const queryClient = useQueryClient();
   const [userData, setUserData] = useState();
-  const [snackStatus, setSnackStatus] = useState();
   const [isSuccess, setIsSuccess] = useState(false);
 
   // ユーザーデータ登録（会員登録）
@@ -47,25 +47,17 @@ const useMutationUserData = () => {
               auth.currentUser.delete().then(() => {
                 console.log(error.code);
                 console.log(error.message);
-              });
-              setSnackStatus({
-                open: true,
-                type: "error",
-                message: "ログインに失敗しました。",
+                throw new Error("ユーザーデータの登録に失敗しました");
               });
             });
         }
       })
       .catch((error) => {
-        setSnackStatus({
-          open: true,
-          type: "error",
-          message: "ログインに失敗しました。",
-        });
         console.log(error);
         console.log(error.message);
+        throw new Error("ユーザーデータの登録に失敗しました");
       });
-    return { userData, snackStatus, isSuccess };
+    return { userData, isSuccess };
   };
 
   // サインイン
@@ -90,16 +82,12 @@ const useMutationUserData = () => {
         }
       })
       .catch((error) => {
-        setSnackStatus({
-          open: true,
-          type: "error",
-          message: "ログインに失敗しました。",
-        });
         console.log(error);
         console.log(error.message);
+        throw new Error("DB取得で失敗");
       });
 
-    return { userData, snackStatus, isSuccess };
+    return { userData, isSuccess };
   };
 
   // カートに入れる詳細
@@ -129,7 +117,6 @@ const useMutationUserData = () => {
     const docSnap = await getDoc(UserFavoriteRef);
 
     if (docSnap.exists()) {
-      console.log(addFavoriteData.sizeType);
       // すでにデータが存在する場合、sizeTypeだけ追加
       await updateDoc(UserFavoriteRef, {
         sizType: arrayUnion(addFavoriteData.sizeType),
@@ -145,42 +132,52 @@ const useMutationUserData = () => {
   //////////////////////////////////////////////////////////
 
   // useMutationを使ってユーザーデータ登録・セット
-  const signup = useMutation((props) => signupAction(props), {
-    onSuccess: (res) => {
-      if (res.isSuccess)
-        queryClient.setQueryData(CacheName.USERDATA, res.userData);
+  const signup = useMutationWrapper({
+    func: (data) => signupAction(data),
+    options: {
+      onSuccess: (res) => {
+        if (res.isSuccess)
+          queryClient.setQueryData(CacheName.USERDATA, res.userData);
+      },
     },
   });
 
   // サインイン処理
-  const signin = useMutation((props) => signinAction(props), {
-    onSuccess: (res) => {
-      if (res.isSuccess)
-        queryClient.setQueryData(CacheName.USERDATA, res.userData);
+  const signin = useMutationWrapper({
+    func: (data) => signinAction(data),
+    options: {
+      onSuccess: (res) => {
+        if (res.isSuccess)
+          queryClient.setQueryData(CacheName.USERDATA, res.userData);
+      },
     },
   });
 
   // カートに入れる
-  const addCart = useMutation((addCartData) => addCartAction(addCartData), {
-    onMutate: async () => {
-      await queryClient.cancelQueries(CacheName.USERCARTCNT);
+  const addCart = useMutationWrapper({
+    func: (addCartData) => addCartAction(addCartData),
+    options: {
+      onMutate: async () => {
+        await queryClient.cancelQueries(CacheName.USERCARTCNT);
 
-      const previousValue = queryClient.getQueryData(CacheName.USERCARTCNT);
-      queryClient.setQueryData(CacheName.USERCARTCNT, (old) =>
-        old !== undefined ? ++old : 1
-      );
+        const previousValue = queryClient.getQueryData(CacheName.USERCARTCNT);
+        queryClient.setQueryData(CacheName.USERCARTCNT, (old) =>
+          old !== undefined ? ++old : 1
+        );
 
-      return previousValue !== undefined ? previousValue : 0;
+        return previousValue !== undefined ? previousValue : 0;
+      },
+      onError: (err, variables, previousValue) =>
+        queryClient.setQueryData(CacheName.USERCARTCNT, previousValue),
+      onSettled: () => queryClient.invalidateQueries(CacheName.USERCARTCNT),
     },
-    onError: (err, variables, previousValue) =>
-      queryClient.setQueryData(CacheName.USERCARTCNT, previousValue),
-    onSettled: () => queryClient.invalidateQueries(CacheName.USERCARTCNT),
+    errText: "カートに入れる処理に失敗しました",
   });
 
   // お気に入りに追加
-  const addFavorite = useMutation(
-    (addFavoriteData) => addFavoriteAction(addFavoriteData),
-    {
+  const addFavorite = useMutationWrapper({
+    func: (addFavoriteData) => addFavoriteAction(addFavoriteData),
+    options: {
       onMutate: async () => {
         await queryClient.cancelQueries(CacheName.USERFAVORITECNT);
 
@@ -196,8 +193,9 @@ const useMutationUserData = () => {
       onError: (err, variables, previousValue) =>
         queryClient.setQueryData(CacheName.USERCARTCNT, previousValue),
       onSettled: () => queryClient.invalidateQueries(CacheName.USERCARTCNT),
-    }
-  );
+    },
+    errText: "お気に入りに追加に失敗しました",
+  });
 
   return { signup, signin, addCart, addFavorite };
 };

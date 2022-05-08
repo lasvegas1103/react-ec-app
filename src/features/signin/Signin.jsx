@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { styled } from "@mui/material/styles";
-import { Button, Snackbar, Alert, Link } from "@mui/material";
-import { useHistory } from "react-router-dom";
+import { Button, Link } from "@mui/material";
 import Form from "../../components/utils/Form";
 import TextInputLoginId from "../../components/utils/TextInputLoginId";
 import TextInputPassWord from "../../components/utils/TextInputPassWord";
@@ -15,14 +14,13 @@ const CustomDiv = styled("div")({
 });
 
 const Signin = () => {
-  const history = useHistory();
   const { signin } = useMutationUserData();
 
   const onSubmit = (data) => {
     signin.mutate(data, {
       onSuccess: (res) => {
         console.log(res);
-        if (res.snackStatus) toast.success(res.snackStatus);
+        if (res.isSuccess) toast.success(res.isSuccess);
       },
     });
   };
@@ -30,6 +28,7 @@ const Signin = () => {
   return (
     <>
       <div>ログイン</div>
+      <ToastContainer />
       <Form onSubmit={onSubmit}>
         <TextInputLoginId name="loginId" />
         <TextInputPassWord name="password" />
