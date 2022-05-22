@@ -12,7 +12,7 @@ const useQueryUser = (props) => {
       "users",
       props.uid,
       "userFavorite",
-      props.uid
+      props.productId
     );
     const docSnap = await getDoc(userFavoriteRef);
     if (docSnap.exists()) {
@@ -22,6 +22,20 @@ const useQueryUser = (props) => {
     }
   };
 
+  // グロナビのお気に入り件数取得
+  const getUserFavoriteCntAction = async (props) => {
+    const userFavoriteRef = doc(db, "users", props.uid, "userFavorite");
+    const docSnap = await getDoc(userFavoriteRef);
+    console.log("ggggg");
+    if (docSnap.exists()) {
+      return docSnap.data();
+    } else {
+      throw new Error("グロナビのお気に入り件数取得に失敗しました");
+    }
+  };
+
+  ///////////////////////////////////////////////////////////////
+
   const getUserFavorite = useQueryWrapper({
     queryKey: CacheName.USERFAVORITE,
     deps: [],
@@ -30,7 +44,16 @@ const useQueryUser = (props) => {
     errText: "お気に入り情報の取得に失敗しました",
   });
 
-  return { getUserFavorite };
+  // グロナビのお気に入り件数取得
+  const getUserFavoriteCnt = useQueryWrapper({
+    queryKey: CacheName.USERFAVORITECNT,
+    deps: [],
+    func: () => getUserFavoriteCntAction(props),
+    options: { staleTime: 1000 * 60 },
+    errText: "お気に入り情報の取得に失敗しました",
+  });
+
+  return { getUserFavorite, getUserFavoriteCnt };
 };
 
 export default useQueryUser;

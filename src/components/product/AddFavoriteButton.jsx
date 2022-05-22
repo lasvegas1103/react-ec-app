@@ -16,7 +16,7 @@ const AddFavoriteButton = ({ productData }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   // すでにお気に入りに追加しているか
   const [isFavorite, setIsFavorite] = useState(
-    currentFavoriteData.sizeType.includes(productData.sizeType)
+    currentFavoriteData?.sizeType?.includes(productData.sizeType)
   );
 
   const handleAddFavorite = (event) => {

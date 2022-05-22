@@ -105,14 +105,14 @@ const useMutationUserData = () => {
   //お気に入りに追加詳細
   const addFavoriteAction = async (addFavoriteData) => {
     let isSuccess = false;
-
+    console.log(addFavoriteData);
     // userFavoriteに登録
     const UserFavoriteRef = doc(
       db,
       "users",
       addFavoriteData.uid,
       "userFavorite",
-      addFavoriteData.uid
+      addFavoriteData.productId
     );
     const docSnap = await getDoc(UserFavoriteRef);
 

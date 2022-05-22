@@ -1,6 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { Grid } from "@mui/material";
+import Header from "../../components/utils/Header";
 import BoxSx from "../../components/MaterialUI/BoxSx";
 import { useQueryClient } from "react-query";
 import useQueryProduct from "../../hooks/useQueryProduct";
@@ -23,28 +24,31 @@ const ProductDetail = () => {
   const { getUserFavorite } = useQueryUser({ uid: uid, productId: productId });
 
   return (
-    <BoxSx>
-      <ToastContainer />
-      {fetchProductDetail.status === "success" &&
-        getUserFavorite.status === "success" && (
-          <Grid
-            container
-            rowSpacing={1}
-            columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-          >
-            <Grid item xs={6}>
-              <div>
-                {/*  画像 */}
-                <SwiperCm images={fetchProductDetail.data.images} />
-              </div>
+    <div>
+      <Header />
+      <BoxSx>
+        <ToastContainer />
+        {fetchProductDetail.status === "success" &&
+          getUserFavorite.status === "success" && (
+            <Grid
+              container
+              rowSpacing={1}
+              columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+            >
+              <Grid item xs={6}>
+                <div>
+                  {/*  画像 */}
+                  <SwiperCm images={fetchProductDetail.data.images} />
+                </div>
+              </Grid>
+              <Grid item xs={6}>
+                {/*  詳細メイン */}
+                <ProductDetailMain data={fetchProductDetail.data} />
+              </Grid>
             </Grid>
-            <Grid item xs={6}>
-              {/*  詳細メイン */}
-              <ProductDetailMain data={fetchProductDetail.data} />
-            </Grid>
-          </Grid>
-        )}
-    </BoxSx>
+          )}
+      </BoxSx>
+    </div>
   );
 };
 

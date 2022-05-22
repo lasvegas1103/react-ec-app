@@ -8,10 +8,6 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { UtilProvider } from "./context/UtilContext";
 
-const Cgrid = styled(Grid)({
-  margin: "3rem 1rem 1rem 2rem",
-});
-
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -26,13 +22,10 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <Header />
-        <Cgrid container justifyContent="center">
-          <UtilProvider>
-            <Router />
-          </UtilProvider>
+        <UtilProvider>
+          <Router />
           <ReactQueryDevtools />
-        </Cgrid>
+        </UtilProvider>
       </BrowserRouter>
     </QueryClientProvider>
   );
