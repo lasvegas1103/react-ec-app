@@ -9,7 +9,7 @@ export const useUserFav = (props) => {
     queryKey: CacheName.USERFAVORITE,
     deps: [],
     func: () => getUserFavoriteAction(props),
-    options: { staleTime: 1000 * 60 },
+    options: {},
     errText: "お気に入り情報の取得に失敗しました",
   });
 
@@ -39,7 +39,7 @@ export const useUserFavCnt = (props) => {
     queryKey: CacheName.USERFAVORITECNT,
     deps: [],
     func: () => getUserFavoriteCntAction(props),
-    options: { staleTime: 1000 * 60 },
+    options: {},
     errText: "お気に入り情報の取得に失敗しました",
   });
 

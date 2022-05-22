@@ -5,14 +5,14 @@ import Header from "../../components/utils/Header";
 import BoxSx from "../../components/MaterialUI/BoxSx";
 import { useQueryClient } from "react-query";
 import useQueryProduct from "../../hooks/useQueryProduct";
-import useQueryUser from "../../hooks/useQueryUser";
+import { useUserFav } from "../../hooks/userHooks";
 import { useUtilContext } from "../../context/UtilContext";
 import SwiperCm from "../../components/product/SwiperCm";
 import ProductDetailMain from "../../components/product/ProductDetailMain";
 
 /* 商品詳細画面 */
 const ProductDetail = () => {
-  const productId = useParams("productId");
+  const { productId } = useParams("productId");
   // キャッシュからUID取得
   const queryClient = useQueryClient();
   const { uid } = queryClient.getQueryData("loginData");
@@ -21,7 +21,7 @@ const ProductDetail = () => {
   // 商品情報取得
   const { fetchProductDetail } = useQueryProduct(productId);
   // ユーザーに紐づく商品情報を取得
-  const { getUserFavorite } = useQueryUser({ uid: uid, productId: productId });
+  const { getUserFavorite } = useUserFav({ uid: uid, productId: productId });
 
   return (
     <div>

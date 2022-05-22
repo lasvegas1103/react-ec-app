@@ -4,7 +4,7 @@ import useQueryWrapper from "./useQueryWrapper";
 import { CacheName } from "../config/constants";
 
 /* 商品詳細画面で必要な情報を取得 */
-const useQueryProduct = (props) => {
+const useQueryProduct = (productId) => {
   const getProductDetail = async (productId) => {
     const productRef = doc(db, "products", productId);
     const docSnap = await getDoc(productRef);
@@ -19,8 +19,8 @@ const useQueryProduct = (props) => {
   const fetchProductDetail = useQueryWrapper({
     queryKey: CacheName.PRODUCTDETAIL,
     deps: [],
-    func: () => getProductDetail(props.productId),
-    options: { staleTime: 1000 * 60 },
+    func: () => getProductDetail(productId),
+    options: {},
     errText: "商品情報を取得できませんでした",
   });
 
