@@ -1,15 +1,15 @@
 import React, { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
-import useInfiniteQueryProductList from "../../hooks/useInfiniteQueryProductList";
+import { useInfiniteProductListByFavQuery } from "../../hooks/productHooks";
 import ProductCard from "../../components/product/ProductCard";
 import { Grid } from "@mui/material";
 import Header from "../../components/utils/Header";
 import BoxSx from "../../components/MaterialUI/BoxSx";
 
-const ProductList = () => {
+const FavoriteDetail = () => {
   const { ref, inView } = useInView();
   const { data, isFetchingNextPage, hasNextPage, fetchNextPage } =
-    useInfiniteQueryProductList();
+    useInfiniteProductListByFavQuery();
 
   useEffect(() => {
     if (inView && hasNextPage) fetchNextPage();
@@ -35,4 +35,4 @@ const ProductList = () => {
   );
 };
 
-export default ProductList;
+export default FavoriteDetail;

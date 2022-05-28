@@ -8,4 +8,5 @@ export const CacheName = {
   USERFAVORITE: "userFavorite",
   PRODUCTDATA: "productData",
   PRODUCTDETAIL: "productDetail",
+  FAVORITELIST: "favoriteList",
 };

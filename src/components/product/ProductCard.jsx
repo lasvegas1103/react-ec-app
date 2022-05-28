@@ -10,21 +10,21 @@ import { Link } from "react-router-dom";
 const ProductCard = (props) => {
   const productData = props.productData;
   return (
-    <Card sx={{ maxWidth: 350, minWidth: 150 }}>
+    <Card sx={{ height: 300, width: 200, maxWidth: 350, minWidth: 150 }}>
       <CardActionArea component={Link} to={`/product/detail/${productData.id}`}>
         <CardMedia
           component="img"
-          height="140px"
+          height="200px"
           image={productData?.images[0]?.path}
           title={productData.title}
           alt="商品画像"
         />
         <CardContent>
-          <Typography gutterBottom variant="h5" component="h2">
+          <Typography gutterBottom variant="h6" component="div">
             {productData.title}
           </Typography>
-          <Typography variant="body2" color="textSecondary" component="p">
-            {productData.description}
+          <Typography variant="body1" color="textSecondary" component="div">
+            ¥{productData.price}
           </Typography>
         </CardContent>
       </CardActionArea>

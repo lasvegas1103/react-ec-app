@@ -14,6 +14,8 @@ import SearchIcon from "@mui/icons-material/Search";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import { useQueryClient } from "react-query";
 import { useUserFavCntQuery } from "../../hooks/userHooks";
@@ -199,7 +201,7 @@ const Header = () => {
               color="inherit"
             >
               <Badge badgeContent={4} color="error">
-                <MailIcon />
+                <ShoppingCartIcon />
               </Badge>
             </IconButton>
             <IconButton
@@ -208,7 +210,7 @@ const Header = () => {
               color="inherit"
             >
               <Badge badgeContent={getUserFavoriteCnt.data} color="error">
-                <NotificationsIcon />
+                <FavoriteIcon />
               </Badge>
             </IconButton>
             <IconButton
