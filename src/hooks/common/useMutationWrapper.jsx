@@ -1,5 +1,5 @@
 import { useMutation } from "react-query";
-import { useUtilContext } from "../context/UtilContext";
+import { useUtilContext } from "../../context/UtilContext";
 
 /* useMutationのwrapper関数 */
 const useMutationWrapper = ({ func, options, errText = "" }) => {

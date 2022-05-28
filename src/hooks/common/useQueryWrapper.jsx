@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { useUtilContext } from "../context/UtilContext";
+import { useUtilContext } from "../../context/UtilContext";
 
 /* useQueryのwrapper関数 */
 const useQueryWrapper = ({

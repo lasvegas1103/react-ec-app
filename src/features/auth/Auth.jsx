@@ -1,10 +1,10 @@
 import React from "react";
 import { useQueryClient } from "react-query";
-import useQueryAuth from "../../hooks/useQueryAuth";
+import { useAuthStateQuery } from "../../hooks/authHooks";
 
 const Auth = ({ children }) => {
   const queryClient = useQueryClient();
-  const { fetchUserData } = useQueryAuth();
+  const { fetchUserData } = useAuthStateQuery();
 
   let loginData = {};
   if (fetchUserData.status === "success")
