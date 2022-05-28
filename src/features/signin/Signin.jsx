@@ -4,7 +4,7 @@ import { Button, Link } from "@mui/material";
 import Form from "../../components/utils/Form";
 import TextInputLoginId from "../../components/utils/TextInputLoginId";
 import TextInputPassWord from "../../components/utils/TextInputPassWord";
-import useMutationUserData from "../../hooks/useMutationUserData";
+import { useSignIn } from "../../hooks/userMutationHooks";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -14,7 +14,7 @@ const CustomDiv = styled("div")({
 });
 
 const Signin = () => {
-  const { signin } = useMutationUserData();
+  const { signin } = useSignIn();
 
   const onSubmit = (data) => {
     signin.mutate(data, {

@@ -2,11 +2,11 @@ import React from "react";
 import Button from "@mui/material/Button";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useQueryClient } from "react-query";
-import useMutationUserData from "../../hooks/useMutationUserData";
+import { useAddCart } from "../../hooks/userMutationHooks";
 
 const AddCartButton = (props) => {
   const queryClient = useQueryClient();
-  const { addCart } = useMutationUserData();
+  const { addCart } = useAddCart();
 
   const handleAddCart = () => {
     // uid、productId取得

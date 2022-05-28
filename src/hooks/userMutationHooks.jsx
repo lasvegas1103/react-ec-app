@@ -9,13 +9,27 @@ import {
   arrayUnion,
   getDoc,
 } from "firebase/firestore";
-import useMutationWrapper from "./useMutationWrapper";
+import useMutationWrapper from "./common/useMutationWrapper";
 import { CacheName } from "../config/constants";
 
-const useMutationUserData = () => {
+/**
+ * 会員登録
+ */
+export const useSignUp = () => {
   const queryClient = useQueryClient();
   const [userData, setUserData] = useState();
   const [isSuccess, setIsSuccess] = useState(false);
+
+  // useMutationを使ってユーザーデータ登録・セット
+  const signup = useMutationWrapper({
+    func: (data) => signupAction(data),
+    options: {
+      onSuccess: (res) => {
+        if (res.isSuccess)
+          queryClient.setQueryData(CacheName.USERDATA, res.userData);
+      },
+    },
+  });
 
   // ユーザーデータ登録（会員登録）
   const signupAction = (props) => {
@@ -60,6 +74,28 @@ const useMutationUserData = () => {
     return { userData, isSuccess };
   };
 
+  return { signup };
+};
+
+/**
+ * ログイン
+ */
+export const useSignIn = () => {
+  const queryClient = useQueryClient();
+  const [userData, setUserData] = useState();
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  // ログイン処理
+  const signin = useMutationWrapper({
+    func: (data) => signinAction(data),
+    options: {
+      onSuccess: (res) => {
+        if (res.isSuccess)
+          queryClient.setQueryData(CacheName.USERDATA, res.userData);
+      },
+    },
+  });
+
   // サインイン
   const signinAction = (props) => {
     auth
@@ -90,70 +126,16 @@ const useMutationUserData = () => {
     return { userData, isSuccess };
   };
 
-  // カートに入れる詳細
-  const addCartAction = (addCartData) => {
-    let isSuccess = false;
+  return { signin };
+};
 
-    // userCartに登録
-    const userCartRef = collection(db, "users", addCartData.uid, "userCart");
-    setDoc(doc(userCartRef), addCartData);
-    isSuccess = true;
+/**
+ * カートに追加
+ */
+export const useAddCart = () => {
+  const queryClient = useQueryClient();
 
-    return { isSuccess, addCartData };
-  };
-
-  //お気に入りに追加詳細
-  const addFavoriteAction = async (addFavoriteData) => {
-    let isSuccess = false;
-    console.log(addFavoriteData);
-    // userFavoriteに登録
-    const UserFavoriteRef = doc(
-      db,
-      "users",
-      addFavoriteData.uid,
-      "userFavorite",
-      addFavoriteData.productId
-    );
-    const docSnap = await getDoc(UserFavoriteRef);
-
-    if (docSnap.exists()) {
-      // すでにデータが存在する場合、sizeTypeだけ追加
-      await updateDoc(UserFavoriteRef, {
-        sizType: arrayUnion(addFavoriteData.sizeType),
-      });
-    } else {
-      await setDoc(UserFavoriteRef, addFavoriteData);
-    }
-
-    isSuccess = true;
-    return { isSuccess, addFavoriteData };
-  };
-
-  //////////////////////////////////////////////////////////
-
-  // useMutationを使ってユーザーデータ登録・セット
-  const signup = useMutationWrapper({
-    func: (data) => signupAction(data),
-    options: {
-      onSuccess: (res) => {
-        if (res.isSuccess)
-          queryClient.setQueryData(CacheName.USERDATA, res.userData);
-      },
-    },
-  });
-
-  // サインイン処理
-  const signin = useMutationWrapper({
-    func: (data) => signinAction(data),
-    options: {
-      onSuccess: (res) => {
-        if (res.isSuccess)
-          queryClient.setQueryData(CacheName.USERDATA, res.userData);
-      },
-    },
-  });
-
-  // カートに入れる
+  // useMutationを使ってカートに追加
   const addCart = useMutationWrapper({
     func: (addCartData) => addCartAction(addCartData),
     options: {
@@ -173,6 +155,27 @@ const useMutationUserData = () => {
     },
     errText: "カートに入れる処理に失敗しました",
   });
+
+  // カートに追加詳細
+  const addCartAction = (addCartData) => {
+    let isSuccess = false;
+
+    // userCartに登録
+    const userCartRef = collection(db, "users", addCartData.uid, "userCart");
+    setDoc(doc(userCartRef), addCartData);
+    isSuccess = true;
+
+    return { isSuccess, addCartData };
+  };
+
+  return { addCart };
+};
+
+/**
+ * お気に入りに追加
+ */
+export const useAddFavorite = () => {
+  const queryClient = useQueryClient();
 
   // お気に入りに追加
   const addFavorite = useMutationWrapper({
@@ -197,7 +200,31 @@ const useMutationUserData = () => {
     errText: "お気に入りに追加に失敗しました",
   });
 
-  return { signup, signin, addCart, addFavorite };
-};
+  //お気に入りに追加詳細
+  const addFavoriteAction = async (addFavoriteData) => {
+    let isSuccess = false;
+    // userFavoriteに登録
+    const UserFavoriteRef = doc(
+      db,
+      "users",
+      addFavoriteData.uid,
+      "userFavorite",
+      addFavoriteData.productId
+    );
+    const docSnap = await getDoc(UserFavoriteRef);
 
-export default useMutationUserData;
+    if (docSnap.exists()) {
+      // すでにデータが存在する場合、sizeTypeだけ追加
+      await updateDoc(UserFavoriteRef, {
+        sizType: arrayUnion(addFavoriteData.sizeType),
+      });
+    } else {
+      await setDoc(UserFavoriteRef, addFavoriteData);
+    }
+
+    isSuccess = true;
+    return { isSuccess, addFavoriteData };
+  };
+
+  return { addFavorite };
+};

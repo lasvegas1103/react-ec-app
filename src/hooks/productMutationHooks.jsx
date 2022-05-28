@@ -1,15 +1,30 @@
 import { useState } from "react";
-import { useMutation, useQueryClient } from "react-query";
+import { useQueryClient } from "react-query";
+import useMutationWrapper from "./common/useMutationWrapper";
 import { db, FirebaseTimeStamp } from "../firebase/index";
 import { CacheName } from "../config/constants";
 
-const useMutationProduct = () => {
+/**
+ * 商品情報登録
+ */
+export const useSaveProduct = () => {
   const queryClient = useQueryClient();
   const [productData, setProductData] = useState([]);
   const [isSuccess, setIsSuccess] = useState(false);
   const productsRef = db.collection("products");
 
-  // 商品の登録
+  // useMutationを使って商品情報を登録
+  const saveProduct = useMutationWrapper({
+    func: (data) => saveProductAction(data),
+    options: {
+      onSuccess: (res) => {
+        if (res.isSuccess)
+          queryClient.setQueryData(CacheName.PRODUCTDATA, res.productData);
+      },
+    },
+  });
+
+  // firestoreに登録
   const saveProductAction = (props) => {
     const timestamp = FirebaseTimeStamp.now();
     const data = {
@@ -39,15 +54,5 @@ const useMutationProduct = () => {
     return { productData, isSuccess };
   };
 
-  const saveProduct = useMutation((props) => saveProductAction(props), {
-    onSuccess: (res) => {
-      if (res.isSuccess)
-        // 必要？？
-        queryClient.setQueryDate(CacheName.PRODUCTDATA, res.productData);
-    },
-  });
-
   return { saveProduct };
 };
-
-export default useMutationProduct;

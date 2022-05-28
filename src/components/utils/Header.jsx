@@ -16,7 +16,7 @@ import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import { useQueryClient } from "react-query";
-import { useUserFavCnt } from "../../hooks/userHooks";
+import { useUserFavCntQuery } from "../../hooks/userHooks";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -63,7 +63,7 @@ const Header = () => {
   const queryClient = useQueryClient();
   const { uid } = queryClient.getQueryData("loginData");
   // お気に入り件数取得
-  const { getUserFavoriteCnt } = useUserFavCnt({ uid: uid });
+  const { getUserFavoriteCnt } = useUserFavCntQuery({ uid: uid });
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 

@@ -4,8 +4,8 @@ import { Grid } from "@mui/material";
 import Header from "../../components/utils/Header";
 import BoxSx from "../../components/MaterialUI/BoxSx";
 import { useQueryClient } from "react-query";
-import useQueryProduct from "../../hooks/useQueryProduct";
-import { useUserFav } from "../../hooks/userHooks";
+import { useProductQuery } from "../../hooks/productHooks";
+import { useUserFavQuery } from "../../hooks/userHooks";
 import { useUtilContext } from "../../context/UtilContext";
 import SwiperCm from "../../components/product/SwiperCm";
 import ProductDetailMain from "../../components/product/ProductDetailMain";
@@ -19,9 +19,12 @@ const ProductDetail = () => {
   // toastセット
   const { ToastContainer } = useUtilContext();
   // 商品情報取得
-  const { fetchProductDetail } = useQueryProduct(productId);
+  const { fetchProductDetail } = useProductQuery(productId);
   // ユーザーに紐づく商品情報を取得
-  const { getUserFavorite } = useUserFav({ uid: uid, productId: productId });
+  const { getUserFavorite } = useUserFavQuery({
+    uid: uid,
+    productId: productId,
+  });
 
   return (
     <div>

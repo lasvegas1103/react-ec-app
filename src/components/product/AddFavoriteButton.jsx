@@ -3,14 +3,14 @@ import { pink, grey } from "@mui/material/colors";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import PopperCm from "../MaterialUI/PopperCm";
 import { useQueryClient } from "react-query";
-import useMutationUserData from "../../hooks/useMutationUserData";
+import { useAddFavorite } from "../../hooks/userMutationHooks";
 import { CacheName } from "../../config/constants";
 
 /* お気に入り追加ボタン */
 const AddFavoriteButton = ({ productData }) => {
   const queryClient = useQueryClient();
   const currentFavoriteData = queryClient.getQueryData(CacheName.USERFAVORITE);
-  const { addFavorite } = useMutationUserData();
+  const { addFavorite } = useAddFavorite();
   // popperの制御
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);

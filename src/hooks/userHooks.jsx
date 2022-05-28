@@ -1,10 +1,12 @@
 import { db } from "../firebase/index";
 import { getDoc, getDocs, query, doc, collection } from "firebase/firestore";
-import useQueryWrapper from "./useQueryWrapper";
+import useQueryWrapper from "./common/useQueryWrapper";
 import { CacheName } from "../config/constants";
 
-/* 商品詳細画面でお気に入り情報取得 */
-export const useUserFav = (props) => {
+/**
+ * 商品詳細画面でお気に入り情報取得
+ */
+export const useUserFavQuery = (props) => {
   const getUserFavorite = useQueryWrapper({
     queryKey: CacheName.USERFAVORITE,
     deps: [],
@@ -32,9 +34,10 @@ export const useUserFav = (props) => {
   return { getUserFavorite };
 };
 
-///////////////////////////////////////////////////////////////
-/* グロナビのお気に入り件数取得 */
-export const useUserFavCnt = (props) => {
+/**
+ * グロナビのお気に入り件数取得
+ */
+export const useUserFavCntQuery = (props) => {
   const getUserFavoriteCnt = useQueryWrapper({
     queryKey: CacheName.USERFAVORITECNT,
     deps: [],

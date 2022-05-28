@@ -6,7 +6,7 @@ import TextSelect from "../../components/product/TextSelect";
 import SizeArea from "../../components/product/SizeArea";
 import ImageArea from "../../components/product/ImageArea";
 import { Button, InputAdornment } from "@mui/material";
-import useMutationProduct from "../../hooks/useMutationProduct";
+import { useSaveProduct } from "../../hooks/productMutationHooks";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -49,7 +49,7 @@ const sex = [
   },
 ];
 const ProductRegist = () => {
-  const { saveProduct } = useMutationProduct();
+  const { saveProduct } = useSaveProduct();
   const [images, setImages] = useState([]);
   const [sizes, setSizes] = useState([]);
 

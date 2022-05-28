@@ -5,12 +5,12 @@ import TextInputLoginId from "../../components/utils/TextInputLoginId";
 import TextInputPassWord from "../../components/utils/TextInputPassWord";
 import TextInputPassWordConfirm from "../../components/utils/TextInputPassWordConfirm";
 import TextInputName from "../../components/utils/TextInputName";
-import useMutationUserData from "../../hooks/useMutationUserData";
+import { useSignUp } from "../../hooks/userMutationHooks";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const Signup = () => {
-  const { signup } = useMutationUserData();
+  const { signup } = useSignUp();
 
   const onSubmit = (data) => {
     signup.mutate(data, {
