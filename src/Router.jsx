@@ -13,6 +13,8 @@ import {
 const Router = () => {
   return (
     <Switch>
+      <Route exact path="/signup" component={Signup} />
+      <Route exact path="/signin" component={Signin} />
       <Auth>
         <Route exact path="/product/list" component={ProductList} />
         <Route exact path="/product/regist" component={ProductRegist} />
@@ -21,8 +23,6 @@ const Router = () => {
           path="/product/detail/:productId"
           component={ProductDetail}
         />
-        <Route exact path="/signup" component={Signup} />
-        <Route exact path="/signin" component={Signin} />
         <Route exact path="/user/favoritelist" component={FavoriteDetail} />
       </Auth>
     </Switch>
