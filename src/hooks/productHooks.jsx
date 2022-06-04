@@ -11,6 +11,7 @@ import {
   getDocs,
   doc,
   getDoc,
+  where,
 } from "firebase/firestore";
 
 /**
@@ -42,7 +43,7 @@ export const useProductQuery = (productId) => {
 /**
  * お気に入り詳細画面表示
  */
-export const useInfiniteProductListByFavQuery = () => {
+export const useInfiniteProductListByFavQuery = (uid) => {
   // useInfiniteQueryを使って商品情報を登録
   const {
     data,
@@ -70,11 +71,21 @@ export const useInfiniteProductListByFavQuery = () => {
   };
 
   const getProductList = async (props) => {
+    //　お気に入りに追加している商品IDを取得
+    const userFavoriteRef = query(collection(db, "users", uid, "userFavorite"));
+    const querySnapshot = await getDocs(userFavoriteRef);
+    let productListOfUserfavData = [];
+    querySnapshot.forEach((doc) => {
+      productListOfUserfavData.push(doc.data().productId);
+    });
+
+    // お気に入り詳細画面に表示する商品情報を取得
     const productRef = query(
       collection(db, "products"),
+      where("id", "in", productListOfUserfavData),
       orderBy("update_at"),
       startAfter(props.pageParam),
-      limit("9")
+      limit("10")
     );
     const docSnapShot = await getDocs(productRef);
 
