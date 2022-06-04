@@ -44,7 +44,7 @@ export const useProductQuery = (productId) => {
  * お気に入り詳細画面表示
  */
 export const useInfiniteProductListByFavQuery = (uid) => {
-  // useInfiniteQueryを使って商品情報を登録
+  // useInfiniteQueryを使って商品情報を取得
   const {
     data,
     isLoading,

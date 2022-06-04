@@ -21,7 +21,7 @@ const AddFavoriteButton = ({ productData }) => {
 
   const handleAddFavorite = (event) => {
     // すでにお気に入りに追加されている場合、処理しない
-    // if (isFavorite) return false;
+    if (isFavorite) return false;
 
     // uid、productId取得
     const { uid } = queryClient.getQueryData(CacheName.LOGINDATA);

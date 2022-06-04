@@ -19,7 +19,6 @@ const Signin = () => {
   const onSubmit = (data) => {
     signin.mutate(data, {
       onSuccess: (res) => {
-        console.log(res);
         if (res.isSuccess) toast.success(res.isSuccess);
       },
     });

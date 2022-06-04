@@ -8,6 +8,7 @@ import {
   updateDoc,
   arrayUnion,
   getDoc,
+  deleteDoc,
 } from "firebase/firestore";
 import useMutationWrapper from "./common/useMutationWrapper";
 import { CacheName } from "../config/constants";
@@ -227,4 +228,55 @@ export const useAddFavorite = () => {
   };
 
   return { addFavorite };
+};
+
+/**
+ * お気に入りから削除
+ */
+export const useDeleteFavorite = () => {
+  const queryClient = useQueryClient();
+
+  // お気に入りから削除
+  const deleteFavorite = useMutationWrapper({
+    func: (deleteFavoriteData) => deleteFavoriteAction(deleteFavoriteData),
+    options: {
+      onMutate: async () => {
+        await queryClient.cancelQueries(CacheName.USERFAVORITECNT);
+
+        const previousValue = queryClient.getQueryData(
+          CacheName.USERFAVORITECNT
+        );
+        queryClient.setQueryData(CacheName.USERFAVORITECNT, (old) =>
+          old !== undefined ? --old : 1
+        );
+
+        return previousValue !== undefined ? previousValue : 0;
+      },
+      onError: (err, variables, previousValue) =>
+        queryClient.setQueryData(CacheName.USERCARTCNT, previousValue),
+      onSettled: () => {
+        queryClient.invalidateQueries(CacheName.USERCARTCNT);
+        queryClient.invalidateQueries(CacheName.FAVORITELIST);
+      },
+    },
+    errText: "お気に入りから削除に失敗しました",
+  });
+
+  //お気に入りから削除
+  const deleteFavoriteAction = async (deleteFavoriteData) => {
+    // users/userFavoriteから削除
+    await deleteDoc(
+      doc(
+        db,
+        "users",
+        deleteFavoriteData.uid,
+        "userFavorite",
+        deleteFavoriteData.productId
+      )
+    );
+
+    return;
+  };
+
+  return { deleteFavorite };
 };
