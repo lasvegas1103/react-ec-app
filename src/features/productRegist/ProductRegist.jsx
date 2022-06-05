@@ -136,7 +136,15 @@ const ProductRegist = () => {
           }}
         />
         <SizeArea name={"sizes"} sizes={sizes} setSizes={setSizes} />
-        <ImageArea name={"image"} images={images} setImages={setImages} />
+        <ImageArea
+          name={"image"}
+          images={images}
+          setImages={setImages}
+          rules={{
+            required: "画像をアップロードしてください。",
+          }}
+          toast={toast}
+        />
 
         <Button variant="contained" color="primary" type="submit">
           商品を登録
