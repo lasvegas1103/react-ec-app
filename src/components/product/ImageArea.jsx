@@ -5,7 +5,6 @@ import { IconButton, FormHelperText } from "@mui/material";
 import { storage } from "../../firebase";
 import ImagePreview from "./ImagePreview";
 import imageCompression from "browser-image-compression";
-import TextInput from "../../components/product/TextInput";
 
 const Cinput = styled("input")({
   display: "none",
@@ -23,13 +22,6 @@ const CformHelperText = styled(FormHelperText)({
 
 const ImageArea = (props) => {
   const name = props.name;
-  const { field } = useController({
-    name: props.name,
-    control: props.control,
-    rules: props.rules,
-    defaultValue: "",
-  });
-
   const uploadImage = async (event) => {
     const file = event.target.files[0];
 
@@ -95,7 +87,14 @@ const ImageArea = (props) => {
       <IconButton>
         <label>
           <CameraAltIcon />
-          <Cinput {...field} type="file" name="image" onChange={uploadImage} />
+          <Cinput
+            type="file"
+            {...props.register("image", { required: true })}
+            onChange={(e) => {
+              props.register("image").onChange(e);
+              uploadImage(e);
+            }}
+          />
         </label>
       </IconButton>
       {props["errors"]?.[name]?.["type"] === "required" && (

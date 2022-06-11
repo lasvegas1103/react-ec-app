@@ -12,10 +12,10 @@ import AddFavoriteButton from "./AddFavoriteButton";
 const SizeList = (props) => {
   return (
     <TableContainer
-      sx={{ width: "25rem", height: "100%", boxShadow: 0 }}
+      sx={{ width: "25rem", height: "10rem", boxShadow: 0 }}
       component={Paper}
     >
-      <Table sx={{ width: "100%" }} aria-label="simple table">
+      <Table sx={{}} aria-label="simple table">
         <TableBody>
           {props.sizes.length > 0 &&
             props.sizes.map((size) => (

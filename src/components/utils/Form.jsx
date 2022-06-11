@@ -7,6 +7,7 @@ const Form = ({ children, onSubmit }) => {
     control,
     getValues,
     setValue,
+    register,
     formState: { errors },
   } = useForm();
 
@@ -22,6 +23,7 @@ const Form = ({ children, onSubmit }) => {
                 errors,
                 getValues,
                 setValue,
+                register,
               },
             })
           : child;
