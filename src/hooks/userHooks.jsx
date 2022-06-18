@@ -43,7 +43,7 @@ export const useUserFavCntQuery = (props) => {
     deps: [],
     func: () => getUserFavoriteCntAction(props),
     options: {},
-    errText: "お気に入り情報の取得に失敗しました",
+    errText: "",
   });
 
   const getUserFavoriteCntAction = async (props) => {

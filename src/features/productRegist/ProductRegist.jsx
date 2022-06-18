@@ -143,7 +143,6 @@ const ProductRegist = () => {
           rules={{
             required: "画像をアップロードしてください。",
           }}
-          toast={toast}
         />
 
         <Button variant="contained" color="primary" type="submit">

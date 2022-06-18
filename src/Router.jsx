@@ -13,11 +13,12 @@ import {
 const Router = () => {
   return (
     <Switch>
+      <Route exact path="/" component={Signin} />
       <Route exact path="/signup" component={Signup} />
       <Route exact path="/signin" component={Signin} />
       <Auth>
-        <Route exact path="/product/list" component={ProductList} />
-        <Route exact path="/product/regist" component={ProductRegist} />
+        <Route path="/product/list/" component={ProductList} />
+        <Route path="/product/regist" component={ProductRegist} />
         <Route
           exact
           path="/product/detail/:productId"

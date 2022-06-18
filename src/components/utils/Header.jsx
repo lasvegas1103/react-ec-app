@@ -63,9 +63,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 const Header = () => {
   // キャッシュからUID取得
   const queryClient = useQueryClient();
-  const { uid } = queryClient.getQueryData("loginData");
+  const loginData = queryClient.getQueryData("loginData");
   // お気に入り件数取得
-  const { getUserFavoriteCnt } = useUserFavCntQuery({ uid: uid });
+  const { getUserFavoriteCnt } = useUserFavCntQuery({ uid: loginData?.uid });
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -182,7 +182,7 @@ const Header = () => {
             component="div"
             sx={{ display: { xs: "none", sm: "block" } }}
           >
-            ECサイト
+            ECサイト（仮）
           </Typography>
           <Search>
             <SearchIconWrapper>

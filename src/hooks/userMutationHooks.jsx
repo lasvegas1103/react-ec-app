@@ -26,8 +26,7 @@ export const useSignUp = () => {
     func: (data) => signupAction(data),
     options: {
       onSuccess: (res) => {
-        if (res.isSuccess)
-          queryClient.setQueryData(CacheName.USERDATA, res.userData);
+        queryClient.setQueryData(CacheName.USERDATA, res.userData);
       },
     },
   });
@@ -72,7 +71,13 @@ export const useSignUp = () => {
         console.log(error.message);
         throw new Error("ユーザーデータの登録に失敗しました");
       });
-    return { userData, isSuccess };
+    return new Promise((resolve, reject) => {
+      if (isSuccess) {
+        resolve(userData);
+      } else {
+        reject();
+      }
+    });
   };
 
   return { signup };
@@ -124,7 +129,13 @@ export const useSignIn = () => {
         throw new Error("DB取得で失敗");
       });
 
-    return { userData, isSuccess };
+    return new Promise((resolve, reject) => {
+      if (isSuccess) {
+        resolve(userData);
+      } else {
+        reject();
+      }
+    });
   };
 
   return { signin };

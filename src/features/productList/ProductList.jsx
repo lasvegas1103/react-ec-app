@@ -1,12 +1,18 @@
 import React, { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { useInView } from "react-intersection-observer";
 import useInfiniteQueryProductList from "../../hooks/useInfiniteQueryProductList";
 import ProductCard from "../../components/product/ProductCard";
 import { Grid } from "@mui/material";
 import Header from "../../components/utils/Header";
 import BoxSx from "../../components/MaterialUI/BoxSx";
+import ModalCm from "../../components/MaterialUI/ModalCm";
 
 const ProductList = () => {
+  const search = useLocation().search;
+  const queryString = new URLSearchParams(search);
+  const isSignup = queryString.get("isSignup");
+
   const { ref, inView } = useInView();
   const { data, isFetchingNextPage, hasNextPage, fetchNextPage } =
     useInfiniteQueryProductList();
@@ -17,6 +23,7 @@ const ProductList = () => {
 
   return (
     <div>
+      {isSignup && <ModalCm />}
       <Header />
       <BoxSx>
         <Grid container justifyContent="center" spacing={3}>

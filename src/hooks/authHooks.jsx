@@ -8,7 +8,6 @@ import { CacheName } from "../config/constants";
  */
 export const useAuthStateQuery = () => {
   const history = useHistory();
-
   const fetchUserData = useQueryWrapper({
     queryKey: CacheName.LOGINDATA,
     deps: [],
