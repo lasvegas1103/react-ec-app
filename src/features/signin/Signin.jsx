@@ -26,8 +26,8 @@ const Signin = () => {
         // ログインに成功したら商品一覧画面に遷移
         history.push("/product/list");
       },
-      onError: () => {
-        toast.error("ログインに失敗しました。再度ログインしてください。");
+      onError: (errText) => {
+        toast.error(errText);
       },
     });
   };

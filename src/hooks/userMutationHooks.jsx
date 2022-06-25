@@ -1,15 +1,6 @@
-import { useState } from "react";
 import { useQueryClient } from "react-query";
 import { auth, db, FirebaseTimeStamp } from "../firebase/index";
-import {
-  doc,
-  collection,
-  setDoc,
-  updateDoc,
-  arrayUnion,
-  getDoc,
-  deleteDoc,
-} from "firebase/firestore";
+import { doc, collection, setDoc, addDoc, deleteDoc } from "firebase/firestore";
 import useMutationWrapper from "./common/useMutationWrapper";
 import { CacheName } from "../config/constants";
 
@@ -18,8 +9,6 @@ import { CacheName } from "../config/constants";
  */
 export const useSignUp = () => {
   const queryClient = useQueryClient();
-  const [userData, setUserData] = useState();
-  const [isSuccess, setIsSuccess] = useState(false);
 
   // useMutationを使ってユーザーデータ登録・セット
   const signup = useMutationWrapper({
@@ -33,50 +22,44 @@ export const useSignUp = () => {
 
   // ユーザーデータ登録（会員登録）
   const signupAction = (props) => {
-    auth
-      .createUserWithEmailAndPassword(props.loginId, props.password)
-      .then((result) => {
-        const user = result.user;
-        if (user) {
-          const uid = user.uid;
-          const timestamp = FirebaseTimeStamp.now();
-
-          let userInitialData = {
-            uid: uid,
-            username: props.username,
-            loginId: props.loginId,
-            role: "customer",
-            created_at: timestamp,
-            update_at: timestamp,
-          };
-
-          db.collection("users")
-            .doc(uid)
-            .set(userInitialData)
-            .then(() => {
-              setUserData(userInitialData);
-              setIsSuccess(true);
-            })
-            .catch((error) => {
-              auth.currentUser.delete().then(() => {
-                console.log(error.code);
-                console.log(error.message);
-                throw new Error("ユーザーデータの登録に失敗しました");
-              });
-            });
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        console.log(error.message);
-        throw new Error("ユーザーデータの登録に失敗しました");
-      });
     return new Promise((resolve, reject) => {
-      if (isSuccess) {
-        resolve(userData);
-      } else {
-        reject();
-      }
+      auth
+        .createUserWithEmailAndPassword(props.loginId, props.password)
+        .then((result) => {
+          const user = result.user;
+          if (user) {
+            const uid = user.uid;
+            const timestamp = FirebaseTimeStamp.now();
+
+            let userInitialData = {
+              uid: uid,
+              username: props.username,
+              loginId: props.loginId,
+              role: "customer",
+              created_at: timestamp,
+              update_at: timestamp,
+            };
+
+            db.collection("users")
+              .doc(uid)
+              .set(userInitialData)
+              .then(() => {
+                resolve(userInitialData);
+              })
+              .catch((error) => {
+                auth.currentUser.delete().then(() => {
+                  console.log(error);
+                  reject(
+                    "会員登録に失敗しました。再度会員登録をしてください。"
+                  );
+                });
+              });
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          reject("会員登録に失敗しました。再度会員登録をしてください。");
+        });
     });
   };
 
@@ -88,8 +71,6 @@ export const useSignUp = () => {
  */
 export const useSignIn = () => {
   const queryClient = useQueryClient();
-  const [userData, setUserData] = useState();
-  const [isSuccess, setIsSuccess] = useState(false);
 
   // ログイン処理
   const signin = useMutationWrapper({
@@ -104,37 +85,29 @@ export const useSignIn = () => {
 
   // サインイン
   const signinAction = (props) => {
-    auth
-      .signInWithEmailAndPassword(props.loginId, props.password)
-      .then((result) => {
-        const user = result.user;
-        if (user) {
-          const uid = user.uid;
-
-          db.collection("users")
-            .doc(uid)
-            .get()
-            .then((userData) => {
-              let data = userData.data();
-              setUserData(data);
-              setIsSuccess(true);
-            });
-        } else {
-          throw new Error("DB取得で失敗");
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        console.log(error.message);
-        throw new Error("DB取得で失敗");
-      });
-
     return new Promise((resolve, reject) => {
-      if (isSuccess) {
-        resolve(userData);
-      } else {
-        reject();
-      }
+      auth
+        .signInWithEmailAndPassword(props.loginId, props.password)
+        .then((result) => {
+          const user = result.user;
+          if (user) {
+            const uid = user.uid;
+
+            db.collection("users")
+              .doc(uid)
+              .get()
+              .then((userData) => {
+                resolve(userData.data());
+              });
+          } else {
+            reject("ログインに失敗しました。再度ログインしてください。");
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          console.log(error.message);
+          reject("ログインに失敗しました。再度ログインしてください。");
+        });
     });
   };
 
@@ -214,28 +187,21 @@ export const useAddFavorite = () => {
 
   //お気に入りに追加詳細
   const addFavoriteAction = async (addFavoriteData) => {
-    let isSuccess = false;
-    // userFavoriteに登録
-    const UserFavoriteRef = doc(
-      db,
-      "users",
-      addFavoriteData.uid,
-      "userFavorite",
-      addFavoriteData.productId
-    );
-    const docSnap = await getDoc(UserFavoriteRef);
+    try {
+      // userFavoriteに登録
+      const UserFavoriteRef = collection(
+        db,
+        "users",
+        addFavoriteData.uid,
+        "userFavorite"
+      );
 
-    if (docSnap.exists()) {
-      // すでにデータが存在する場合、sizeTypeだけ追加
-      await updateDoc(UserFavoriteRef, {
-        sizType: arrayUnion(addFavoriteData.sizeType),
-      });
-    } else {
-      await setDoc(UserFavoriteRef, addFavoriteData);
+      // 追加
+      await addDoc(UserFavoriteRef, addFavoriteData);
+    } catch (e) {
+      throw new Error("お気に入り追加に失敗しました。");
     }
-
-    isSuccess = true;
-    return { isSuccess, addFavoriteData };
+    return { addFavoriteData };
   };
 
   return { addFavorite };

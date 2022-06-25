@@ -8,11 +8,11 @@ const Auth = ({ children }) => {
   const { fetchUserData } = useAuthStateQuery();
 
   let loginData = {};
-  if (fetchUserData.status === "success")
+  if (!fetchUserData.isLoading)
     loginData = queryClient.getQueryData("loginData");
 
   if (fetchUserData.isLoading) {
-    return <div>ログイン中…</div>;
+    return <div></div>;
   }
 
   if (!loginData.isSignedIn) {
