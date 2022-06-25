@@ -11,9 +11,10 @@ const useInfiniteQueryWrapper = ({
 }) => {
   const { toast } = useUtilContext();
   const qk = Array.isArray(deps) ? [queryKey, ...deps] : [queryKey];
+
   const result = useInfiniteQuery(
     qk,
-    async ({ pageParam = 0 }) => {
+    async (pageParam) => {
       try {
         const result = await func(pageParam);
 

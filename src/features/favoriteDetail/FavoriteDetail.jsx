@@ -30,6 +30,7 @@ const FavoriteDetail = () => {
   };
 
   useEffect(() => {
+    console.log(hasNextPage);
     if (inView && hasNextPage) fetchNextPage();
   }, [inView]);
 
