@@ -21,7 +21,7 @@ const Router = () => {
         <Route path="/product/regist" component={ProductRegist} />
         <Route
           exact
-          path="/product/detail/:productId"
+          path="/product/detail/:productId/:fromFavDetail?"
           component={ProductDetail}
         />
         <Route exact path="/user/favoritelist" component={FavoriteDetail} />

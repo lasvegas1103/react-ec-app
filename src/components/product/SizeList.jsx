@@ -9,7 +9,7 @@ import AddCartButton from "./AddCartButton";
 import AddFavoriteButton from "./AddFavoriteButton";
 
 /* 商品詳細画面-サイズ一覧 */
-const SizeList = (props) => {
+const SizeList = ({ productData }) => {
   return (
     <TableContainer
       sx={{ width: "25rem", height: "10rem", boxShadow: 0 }}
@@ -17,8 +17,8 @@ const SizeList = (props) => {
     >
       <Table sx={{}} aria-label="simple table">
         <TableBody>
-          {props.sizes.length > 0 &&
-            props.sizes.map((size) => (
+          {productData.sizes.length > 0 &&
+            productData.sizes.map((size) => (
               <TableRow
                 key={size.sizeType}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -33,7 +33,10 @@ const SizeList = (props) => {
                     </TableCell>
                     <TableCell align="left">
                       <AddFavoriteButton
-                        productData={{ sizeType: size.sizeType }}
+                        productData={{
+                          productId: productData.id,
+                          sizeType: size.sizeType,
+                        }}
                       />
                     </TableCell>
                   </>

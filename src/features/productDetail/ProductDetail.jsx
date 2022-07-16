@@ -12,18 +12,20 @@ import ProductDetailMain from "../../components/product/ProductDetailMain";
 
 /* 商品詳細画面 */
 const ProductDetail = () => {
-  const { productId } = useParams("productId");
+  const urlParams = useParams();
+  const { fromFavDetail } = useParams("fromFavDetail");
+  console.log(urlParams);
   // キャッシュからUID取得
   const queryClient = useQueryClient();
   const { uid } = queryClient.getQueryData("loginData");
   // toastセット
   const { ToastContainer } = useUtilContext();
   // 商品情報取得
-  const { fetchProductDetail } = useProductQuery(productId);
+  const { fetchProductDetail } = useProductQuery(urlParams.productId);
   // ユーザーに紐づく商品情報を取得
   const { getUserFavorite } = useUserFavQuery({
     uid: uid,
-    productId: productId,
+    productId: urlParams.productId,
   });
 
   return (
@@ -46,7 +48,10 @@ const ProductDetail = () => {
               </Grid>
               <Grid item xs={6}>
                 {/*  詳細メイン */}
-                <ProductDetailMain data={fetchProductDetail.data} />
+                <ProductDetailMain
+                  productData={fetchProductDetail.data}
+                  favoriteData={getUserFavorite.data}
+                />
               </Grid>
             </Grid>
           )}

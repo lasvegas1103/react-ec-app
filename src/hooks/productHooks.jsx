@@ -20,9 +20,12 @@ import {
 export const useProductQuery = (productId) => {
   const fetchProductDetail = useQueryWrapper({
     queryKey: CacheName.PRODUCTDETAIL,
-    deps: [],
+    deps: [productId],
     func: () => getProductDetail(productId),
-    options: {},
+    options: {
+      staleTime: 0,
+      cacheTime: 60 * 1000,
+    },
     errText: "商品情報を取得できませんでした",
   });
 

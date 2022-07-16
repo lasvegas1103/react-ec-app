@@ -9,27 +9,30 @@ import { CacheName } from "../../config/constants";
 /* お気に入り追加ボタン */
 const AddFavoriteButton = ({ productData }) => {
   const queryClient = useQueryClient();
-  const currentFavoriteData = queryClient.getQueryData(CacheName.USERFAVORITE);
+  const currentFavoriteData = queryClient.getQueryData([
+    CacheName.USERFAVORITE,
+    productData.productId,
+  ]);
   const { addFavorite } = useAddFavorite();
   // popperの制御
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   // すでにお気に入りに追加しているか
-  const [isFavorite, setIsFavorite] = useState(
-    currentFavoriteData?.sizeType?.includes(productData.sizeType)
-  );
+  let favorited = currentFavoriteData
+    ? currentFavoriteData.find((data) => data.sizeType === productData.sizeType)
+    : false;
+  const [isFavorite, setIsFavorite] = useState(favorited);
 
   const handleAddFavorite = (event) => {
     // すでにお気に入りに追加されている場合、処理しない
     if (isFavorite) return false;
 
-    // uid、productId取得
+    // uid取得
     const { uid } = queryClient.getQueryData(CacheName.LOGINDATA);
-    const { id } = queryClient.getQueryData(CacheName.PRODUCTDETAIL);
 
     const addFavoriteData = {
       uid: uid,
-      productId: id,
+      productId: productData.productId,
       sizeType: productData.sizeType,
     };
     if (uid)

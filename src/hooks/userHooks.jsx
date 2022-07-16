@@ -1,5 +1,12 @@
 import { db } from "../firebase/index";
-import { getDoc, getDocs, query, doc, collection } from "firebase/firestore";
+import {
+  getDoc,
+  getDocs,
+  query,
+  doc,
+  collection,
+  where,
+} from "firebase/firestore";
 import useQueryWrapper from "./common/useQueryWrapper";
 import { CacheName } from "../config/constants";
 
@@ -9,26 +16,39 @@ import { CacheName } from "../config/constants";
 export const useUserFavQuery = (props) => {
   const getUserFavorite = useQueryWrapper({
     queryKey: CacheName.USERFAVORITE,
-    deps: [],
+    deps: [props.productId],
     func: () => getUserFavoriteAction(props),
-    options: {},
+    options: {
+      staleTime: 0,
+      cacheTime: 10 * 1000,
+    },
     errText: "お気に入り情報の取得に失敗しました",
   });
 
   const getUserFavoriteAction = async (props) => {
-    const userFavoriteRef = doc(
-      db,
-      "users",
-      props.uid,
-      "userFavorite",
-      props.productId
+    // const userFavoriteRef = doc(
+    //   db,
+    //   "users",
+    //   props.uid,
+    //   "userFavorite",
+    //   props.productId
+    // );
+    // 対象商品に対してお気に入りしていたらデータ取得
+    const q = query(
+      collection(db, "users", props.uid, "userFavorite"),
+      where("productId", "==", props.productId)
     );
-    const docSnap = await getDoc(userFavoriteRef);
-    if (docSnap.exists()) {
-      return docSnap.data();
-    } else {
-      throw new Error("お気に入り情報の取得に失敗しました");
-    }
+    let favData = [];
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      favData.push(doc.data());
+    });
+    return favData;
+    // if (docSnap.exists()) {
+    //   return docSnap.data();
+    // } else {
+    //   return;
+    // }
   };
 
   return { getUserFavorite };
