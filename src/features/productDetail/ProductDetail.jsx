@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Grid } from "@mui/material";
 import Header from "../../components/utils/Header";
@@ -6,6 +6,7 @@ import BoxSx from "../../components/MaterialUI/BoxSx";
 import { useQueryClient } from "react-query";
 import { useProductQuery } from "../../hooks/productHooks";
 import { useUserFavQuery } from "../../hooks/userHooks";
+import { useUpdataUnRead } from "../../hooks/userMutationHooks";
 import { useUtilContext } from "../../context/UtilContext";
 import SwiperCm from "../../components/product/SwiperCm";
 import ProductDetailMain from "../../components/product/ProductDetailMain";
@@ -13,8 +14,6 @@ import ProductDetailMain from "../../components/product/ProductDetailMain";
 /* 商品詳細画面 */
 const ProductDetail = () => {
   const urlParams = useParams();
-  const { fromFavDetail } = useParams("fromFavDetail");
-  console.log(urlParams);
   // キャッシュからUID取得
   const queryClient = useQueryClient();
   const { uid } = queryClient.getQueryData("loginData");
@@ -27,6 +26,19 @@ const ProductDetail = () => {
     uid: uid,
     productId: urlParams.productId,
   });
+  // 既読に更新
+  const { updataUnRead } = useUpdataUnRead();
+
+  useEffect(() => {
+    // 既読に更新
+    if (getUserFavorite.status === "success") {
+      getUserFavorite.data.forEach((data) => {
+        if (data.unRead === true) {
+          updataUnRead.mutate(data);
+        }
+      });
+    }
+  }, [getUserFavorite.status]);
 
   return (
     <div>

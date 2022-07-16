@@ -34,6 +34,7 @@ const AddFavoriteButton = ({ productData }) => {
       uid: uid,
       productId: productData.productId,
       sizeType: productData.sizeType,
+      unRead: true,
     };
     if (uid)
       addFavorite.mutate(addFavoriteData, {

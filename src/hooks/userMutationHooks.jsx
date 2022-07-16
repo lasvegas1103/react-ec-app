@@ -1,6 +1,17 @@
 import { useQueryClient } from "react-query";
 import { auth, db, FirebaseTimeStamp } from "../firebase/index";
-import { doc, collection, setDoc, addDoc, deleteDoc } from "firebase/firestore";
+import {
+  doc,
+  collection,
+  setDoc,
+  addDoc,
+  deleteDoc,
+  query,
+  where,
+  writeBatch,
+  getDocs,
+  getDoc,
+} from "firebase/firestore";
 import useMutationWrapper from "./common/useMutationWrapper";
 import { CacheName } from "../config/constants";
 
@@ -217,22 +228,13 @@ export const useDeleteFavorite = () => {
   const deleteFavorite = useMutationWrapper({
     func: (deleteFavoriteData) => deleteFavoriteAction(deleteFavoriteData),
     options: {
-      onMutate: async () => {
-        await queryClient.cancelQueries(CacheName.USERFAVORITECNT);
-
-        const previousValue = queryClient.getQueryData(
-          CacheName.USERFAVORITECNT
-        );
-        queryClient.setQueryData(CacheName.USERFAVORITECNT, (old) =>
-          old !== undefined ? --old : 1
-        );
-
-        return previousValue !== undefined ? previousValue : 0;
+      onSuccess: () => {
+        queryClient.invalidateQueries(CacheName.USERFAVORITECNT);
       },
       onError: (err, variables, previousValue) =>
-        queryClient.setQueryData(CacheName.USERCARTCNT, previousValue),
+        queryClient.invalidateQueries(CacheName.USERFAVORITECNT),
       onSettled: () => {
-        queryClient.invalidateQueries(CacheName.USERCARTCNT);
+        queryClient.invalidateQueries(CacheName.USERFAVORITECNT);
         queryClient.invalidateQueries(CacheName.FAVORITELIST);
       },
     },
@@ -242,18 +244,53 @@ export const useDeleteFavorite = () => {
   //お気に入りから削除
   const deleteFavoriteAction = async (deleteFavoriteData) => {
     // users/userFavoriteから削除
-    await deleteDoc(
-      doc(
-        db,
-        "users",
-        deleteFavoriteData.uid,
-        "userFavorite",
-        deleteFavoriteData.productId
-      )
+    const deleteUserFavoriteQuery = query(
+      collection(db, "users", deleteFavoriteData.uid, "userFavorite"),
+      where("productId", "==", deleteFavoriteData.productId)
     );
 
+    // バッチ処理
+    const batch = writeBatch(db);
+    const querySnapshot = await getDocs(deleteUserFavoriteQuery);
+    querySnapshot.forEach((doc) => {
+      batch.delete(doc.ref);
+    });
+    await batch.commit();
     return;
   };
 
   return { deleteFavorite };
+};
+
+// 既読に更新してお気に入りアイコンの件数を減らす
+export const useUpdataUnRead = () => {
+  const queryClient = useQueryClient();
+  const updataUnRead = useMutationWrapper({
+    func: (removeFavoritedata) => updataUnReadAction(removeFavoritedata),
+    options: {
+      onSuccess: () => {
+        // お気に入り件数更新
+        queryClient.invalidateQueries(CacheName.USERFAVORITECNT);
+      },
+    },
+    errText: "更新に失敗しました",
+  });
+
+  const updataUnReadAction = async (removeFavoritedata) => {
+    // 既読に更新
+    const userFavoriteQuery = query(
+      collection(db, "users", removeFavoritedata.uid, "userFavorite"),
+      where("productId", "==", removeFavoritedata.productId)
+    );
+
+    // バッチ処理
+    const batch = writeBatch(db);
+    const querySnapshot = await getDocs(userFavoriteQuery);
+    querySnapshot.forEach((doc) => {
+      batch.update(doc.ref, { unRead: false });
+    });
+    await batch.commit();
+  };
+
+  return { updataUnRead };
 };

@@ -67,9 +67,11 @@ export const useUserFavCntQuery = (props) => {
   });
 
   const getUserFavoriteCntAction = async (props) => {
-    const querySnapshot = await getDocs(
-      collection(db, "users", props.uid, "userFavorite")
+    const q = query(
+      collection(db, "users", props.uid, "userFavorite"),
+      where("unRead", "==", true)
     );
+    const querySnapshot = await getDocs(q);
     let favCnt = 0;
     querySnapshot.forEach((doc) => {
       favCnt++;
