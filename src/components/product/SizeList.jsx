@@ -32,6 +32,7 @@ const SizeList = ({ productData }) => {
                       <AddCartButton
                         productData={productData}
                         rowSizeType={size.sizeType}
+                        rowQuantity={size.quantity}
                       />
                     </TableCell>
                     <TableCell align="left">

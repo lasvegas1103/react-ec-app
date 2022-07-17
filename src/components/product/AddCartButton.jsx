@@ -16,7 +16,7 @@ const theme = createTheme({
 });
 
 /* カートに入れるボタン */
-const AddCartButton = ({ productData, rowSizeType }) => {
+const AddCartButton = ({ productData, rowSizeType, rowQuantity }) => {
   const queryClient = useQueryClient();
   const { addCart } = useAddCart();
   // すでにカートに入れているか確認
@@ -39,10 +39,11 @@ const AddCartButton = ({ productData, rowSizeType }) => {
     const addCartData = {
       uid: uid,
       productId: productData.id,
-      iamges: productData.images,
+      images: productData.images,
       title: productData.title,
       price: productData.price,
       sizeType: rowSizeType,
+      quantity: rowQuantity,
     };
     if (uid)
       addCart.mutate(addCartData, {

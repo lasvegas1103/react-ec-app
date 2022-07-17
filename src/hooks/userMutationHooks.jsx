@@ -145,6 +145,7 @@ export const useAddCart = () => {
       },
       onSettled: () => {
         queryClient.invalidateQueries(CacheName.USERCARTCNT);
+        queryClient.invalidateQueries(CacheName.USERCARTLIST);
       },
     },
     errText: "カートに入れる処理に失敗しました",

@@ -114,7 +114,7 @@ const Header = () => {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <ThemeProvider theme={theme}>
-        <AppBar position="static">
+        <AppBar position="fixed">
           <Toolbar>
             {/*  サイト名 */}
             <Typography
