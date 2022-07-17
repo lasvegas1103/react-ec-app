@@ -6,6 +6,7 @@ import BoxSx from "../../components/MaterialUI/BoxSx";
 import { useQueryClient } from "react-query";
 import { useProductQuery } from "../../hooks/productHooks";
 import { useUserFavQuery } from "../../hooks/userHooks";
+import { useUserCartQuery } from "../../hooks/userHooks";
 import { useUpdataUnRead } from "../../hooks/userMutationHooks";
 import { useUtilContext } from "../../context/UtilContext";
 import SwiperCm from "../../components/product/SwiperCm";
@@ -23,6 +24,11 @@ const ProductDetail = () => {
   const { fetchProductDetail } = useProductQuery(urlParams.productId);
   // ユーザーに紐づく商品情報を取得
   const { getUserFavorite } = useUserFavQuery({
+    uid: uid,
+    productId: urlParams.productId,
+  });
+  // ユーザーに紐づくカート情報を取得
+  const { getUserCart } = useUserCartQuery({
     uid: uid,
     productId: urlParams.productId,
   });
@@ -46,6 +52,7 @@ const ProductDetail = () => {
       <BoxSx>
         <ToastContainer />
         {fetchProductDetail.status === "success" &&
+          getUserCart.status === "success" &&
           getUserFavorite.status === "success" && (
             <Grid
               container

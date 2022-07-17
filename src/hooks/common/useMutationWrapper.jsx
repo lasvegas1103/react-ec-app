@@ -7,6 +7,10 @@ const useMutationWrapper = ({ func, options, errText = "" }) => {
   const result = useMutation((variables) => {
     try {
       const data = func(variables);
+      data.catch((e) => {
+        toast.error(errText);
+        console.error(e);
+      });
       return data;
     } catch (e) {
       toast.error(errText);

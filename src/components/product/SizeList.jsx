@@ -29,7 +29,10 @@ const SizeList = ({ productData }) => {
                       {size.sizeType} / 在庫あり
                     </TableCell>
                     <TableCell>
-                      <AddCartButton>カートに入れる</AddCartButton>
+                      <AddCartButton
+                        productData={productData}
+                        rowSizeType={size.sizeType}
+                      />
                     </TableCell>
                     <TableCell align="left">
                       <AddFavoriteButton

@@ -135,33 +135,27 @@ export const useAddCart = () => {
   const addCart = useMutationWrapper({
     func: (addCartData) => addCartAction(addCartData),
     options: {
-      onMutate: async () => {
-        await queryClient.cancelQueries(CacheName.USERCARTCNT);
-
-        const previousValue = queryClient.getQueryData(CacheName.USERCARTCNT);
+      onSuccess: () => {
         queryClient.setQueryData(CacheName.USERCARTCNT, (old) =>
           old !== undefined ? ++old : 1
         );
-
-        return previousValue !== undefined ? previousValue : 0;
       },
-      onError: (err, variables, previousValue) =>
-        queryClient.setQueryData(CacheName.USERCARTCNT, previousValue),
-      onSettled: () => queryClient.invalidateQueries(CacheName.USERCARTCNT),
+      onError: () => {
+        queryClient.invalidateQueries(CacheName.USERCARTCNT);
+      },
+      onSettled: () => {
+        queryClient.invalidateQueries(CacheName.USERCARTCNT);
+      },
     },
     errText: "カートに入れる処理に失敗しました",
   });
 
   // カートに追加詳細
-  const addCartAction = (addCartData) => {
-    let isSuccess = false;
-
+  const addCartAction = async (addCartData) => {
     // userCartに登録
     const userCartRef = collection(db, "users", addCartData.uid, "userCart");
-    setDoc(doc(userCartRef), addCartData);
-    isSuccess = true;
-
-    return { isSuccess, addCartData };
+    await setDoc(doc(userCartRef), addCartData);
+    return;
   };
 
   return { addCart };

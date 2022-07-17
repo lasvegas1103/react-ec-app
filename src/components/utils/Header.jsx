@@ -10,16 +10,13 @@ import InputBase from "@mui/material/InputBase";
 import Badge from "@mui/material/Badge";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
-import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import MailIcon from "@mui/icons-material/Mail";
-import NotificationsIcon from "@mui/icons-material/Notifications";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import MoreIcon from "@mui/icons-material/MoreVert";
 import { useQueryClient } from "react-query";
 import { useUserFavCntQuery } from "../../hooks/userHooks";
+import { useUserCartCntQuery } from "../../hooks/userHooks";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 
 const theme = createTheme({
@@ -78,8 +75,10 @@ const Header = () => {
   const loginData = queryClient.getQueryData("loginData");
   // お気に入り件数取得
   const { getUserFavoriteCnt } = useUserFavCntQuery({ uid: loginData?.uid });
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  // カート件数取得
+  const { getUserCartCnt } = useUserCartCntQuery({ uid: loginData?.uid });
 
+  const [anchorEl, setAnchorEl] = React.useState(null);
   const isMenuOpen = Boolean(anchorEl);
 
   const handleProfileMenuOpen = (event) => {
@@ -143,8 +142,9 @@ const Header = () => {
                 size="large"
                 aria-label="show 4 new mails"
                 color="inherit"
+                onClick={() => history.push("/cart")}
               >
-                <Badge badgeContent={0} color="error">
+                <Badge badgeContent={getUserCartCnt.data} color="error">
                   <ShoppingCartIcon />
                 </Badge>
               </IconButton>

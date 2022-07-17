@@ -8,6 +8,7 @@ import {
   ProductRegist,
   ProductDetail,
   FavoriteDetail,
+  Cart,
 } from "./features/index";
 
 const Router = () => {
@@ -25,6 +26,7 @@ const Router = () => {
           component={ProductDetail}
         />
         <Route exact path="/user/favoritelist" component={FavoriteDetail} />
+        <Route exact path="/cart" component={Cart} />
       </Auth>
     </Switch>
   );
