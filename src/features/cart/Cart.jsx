@@ -88,7 +88,7 @@ const Cart = () => {
                   {getUserCartList.data?.length > 0 ? (
                     getUserCartList.data.map((row) => (
                       <TableRow
-                        key={"a" + row.id}
+                        key={row.productId + row.sizeType}
                         sx={{
                           "&:last-child td, &:last-child th": { border: 0 },
                         }}
@@ -131,7 +131,7 @@ const Cart = () => {
                             onClick={() =>
                               handleDeleteCart({
                                 productId: row.productId,
-                                size: row.size,
+                                sizeType: row.sizeType,
                               })
                             }
                           >
