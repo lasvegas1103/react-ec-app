@@ -1,5 +1,13 @@
-import React from "react";
-import { Grid } from "@mui/material";
+import React, { useState } from "react";
+import {
+  Grid,
+  Button,
+  InputLabel,
+  MenuItem,
+  FormControl,
+  Select,
+} from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { Typography } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -10,8 +18,10 @@ import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
 import Header from "../../components/utils/Header";
 import BoxSx from "../../components/MaterialUI/BoxSx";
+import BasicSelect from "../../components/utils/BasicSelect";
 import { useQueryClient } from "react-query";
 import { useUserCartListQuery } from "../../hooks/userHooks";
+import { useDeleteCart } from "../../hooks/userMutationHooks";
 
 const Cimage = styled("img")({
   height: "auto",
@@ -33,18 +43,9 @@ const CCardMedia = styled("div")({
   margin: "0",
 });
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-  createData("Eclair", 262, 16.0, 24, 6.0),
-  createData("Cupcake", 305, 3.7, 67, 4.3),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-];
-
+/*
+カート詳細画面 
+ */
 const Cart = () => {
   // キャッシュからUID取得
   const queryClient = useQueryClient();
@@ -53,7 +54,23 @@ const Cart = () => {
   const { getUserCartList } = useUserCartListQuery({
     uid: uid,
   });
-  console.log(getUserCartList.data);
+  // カートの商品を削除
+  const { deleteCart } = useDeleteCart();
+
+  // 数量を選択
+  const handleChangeCnt = (event) => {
+    // setQuantity(event.target.value);
+  };
+
+  // カートから商品を削除
+  const handleDeleteCart = ({ productId, sizeType }) => {
+    deleteCart.mutate({
+      uid: uid,
+      productId: productId,
+      sizeType: sizeType,
+    });
+  };
+
   return (
     <div>
       <Header />
@@ -71,7 +88,7 @@ const Cart = () => {
                   {getUserCartList.data?.length > 0 ? (
                     getUserCartList.data.map((row) => (
                       <TableRow
-                        key={row.id}
+                        key={"a" + row.id}
                         sx={{
                           "&:last-child td, &:last-child th": { border: 0 },
                         }}
@@ -98,11 +115,28 @@ const Cart = () => {
                         </TableCell>
                         {/*  個数 */}
                         <TableCell align="left" style={{ width: "3rem" }}>
-                          ※作成まだ
+                          <BasicSelect
+                            func={handleChangeCnt}
+                            cnt={row.quantity}
+                            name={"数量"}
+                            uniqueName={row.productId + row.sizeType}
+                          />
                         </TableCell>
-                        {/*  削除リンク */}
+                        {/*  削除ボタン */}
                         <TableCell align="left" style={{ width: "3rem" }}>
-                          削除
+                          <Button
+                            variant="outlined"
+                            size="small"
+                            startIcon={<DeleteIcon />}
+                            onClick={() =>
+                              handleDeleteCart({
+                                productId: row.productId,
+                                size: row.size,
+                              })
+                            }
+                          >
+                            削除
+                          </Button>
                         </TableCell>
                       </TableRow>
                     ))
