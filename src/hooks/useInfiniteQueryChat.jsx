@@ -1,5 +1,5 @@
 import { useInfiniteQuery } from "react-query";
-import { getChatMessageList } from "../model/chat";
+import { getChatMessageList } from "../model/Chat";
 import { CacheName } from "../config/constants";
 
 /* 
@@ -12,15 +12,21 @@ const useInfiniteQueryChat = () => {
     isLoading,
     isError,
     isFetchingNextPage,
+    isFetchingPreviousPage,
     hasNextPage,
+    hasPreviousPage,
+    fetchPreviousPage,
     fetchNextPage,
   } = useInfiniteQuery(CacheName.CHATMESSAGELIST, async ({pageParam = 0}) => {
-    const res = await getChatMessageList(pageParam);
+    const res = await getChatMessageList({pageParam});
     return res;
   },
   {
     getNextPageParam: (lastPage) => {
       return lastPage.nextPage ?? undefined;
+    },
+    getPreviousPageParam: (prevPage) => {
+      return prevPage.prevCursor ?? undefined;
     },
   }
   );
@@ -30,8 +36,11 @@ const useInfiniteQueryChat = () => {
     isLoading,
     isError,
     isFetchingNextPage,
+    isFetchingPreviousPage,
     hasNextPage,
+    hasPreviousPage,
     fetchNextPage,
+    fetchPreviousPage,
   };
 };
 

@@ -3,35 +3,42 @@ import {
   collection,
   query,
   orderBy,
-  startAfter,
+  startAt,
+  endBefore,
   limit,
   getDocs,
+  serverTimestamp,
+  addDoc,
 } from "firebase/firestore";
+import { MessageCount } from "../config/constants";
 
 /* 
 *チャットのメッセージを取得
 *
 */
-export const getChatMessageList = async ({ pageParam = 0 }) => {
-    const { chatMessageData, lastVisible } = async () => {
-        const chatRef = query(
-            collection(db, "chat", "t4MxssSHoO4bv4fmNYAv", "message"),
-            orderBy("registdate_at"),
-            startAfter(pageParam),
-            limit("10")
-          );
-          const docSnapShot = await getDocs(chatRef);
-      
-          // クエリカーソルに使用
-          const lastVisible = docSnapShot.docs[docSnapShot.docs.length - 1];
-      
-          let productData = [];
-          docSnapShot.forEach((doc) => {
-            chatMessageData.push(doc.data());
-          });
-      
-          return { productData, lastVisible };
-    }
+export const getChatMessageList = async ({pageParam = 0}) => {
+    let pageCount = pageParam?.pageCount ?? 1;
+    let prevVisible = pageParam?.prevVisible ?? null;
 
-    return { chatMessageData, nextPage: lastVisible };
+    const chatRef = collection(db, "chat", "t4MxssSHoO4bv4fmNYAv", "message");
+    
+    // 全体の件数が取得したい
+    const docSnapShotAll = await getDocs(query(chatRef, orderBy("registdate_at")));
+    const allCount = docSnapShotAll.docs.length - 1;
+
+    // メッセージ取得
+    prevVisible = prevVisible === null ? docSnapShotAll.docs[allCount - MessageCount] : prevVisible;
+    const q = query(chatRef, orderBy("registdate_at"),startAt(prevVisible), limit(MessageCount));
+    const docSnapShotForMessage = await getDocs(q);
+  
+      // クエリカーソルに使用
+      const cursor = allCount - (docSnapShotForMessage.docs.length - 1) - MessageCount * pageCount;
+      prevVisible = cursor >= 0 ? docSnapShotAll.docs[cursor] : null;;;
+  
+      let chatMessageData = [];
+      docSnapShotForMessage.forEach((doc) => {
+        chatMessageData.push(doc.data());
+      });
+
+    return { chatMessageData, prevCursor: {prevVisible: prevVisible , pageCount: pageCount + 1} };
   };

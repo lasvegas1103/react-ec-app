@@ -12,3 +12,6 @@ export const CacheName = {
   FAVORITELIST: "favoriteList",
   CHATMESSAGELIST: "chatMessageList",
 };
+
+/* チャットメッセージ件数 */
+export const MessageCount = 10;
