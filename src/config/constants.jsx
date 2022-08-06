@@ -10,4 +10,5 @@ export const CacheName = {
   PRODUCTDATA: "productData",
   PRODUCTDETAIL: "productDetail",
   FAVORITELIST: "favoriteList",
+  CHATMESSAGELIST: "chatMessageList",
 };

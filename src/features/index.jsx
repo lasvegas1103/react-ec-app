@@ -6,3 +6,4 @@ export { default as ProductRegist } from "./productRegist/ProductRegist";
 export { default as ProductDetail } from "./productDetail/ProductDetail";
 export { default as FavoriteDetail } from "./favoriteDetail/FavoriteDetail";
 export { default as Cart } from "./cart/Cart";
+export { default as Chat } from "./chat/Chat";
