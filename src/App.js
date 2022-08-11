@@ -1,6 +1,4 @@
 import "./App.css";
-import { Grid } from "@mui/material";
-import { styled } from "@mui/material/styles";
 import { BrowserRouter } from "react-router-dom";
 import Router from "./Router";
 import { QueryClient, QueryClientProvider } from "react-query";

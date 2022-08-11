@@ -2,10 +2,10 @@ import { useInfiniteQuery } from "react-query";
 import { getChatMessageList } from "../model/Chat";
 import { CacheName } from "../config/constants";
 
-/* 
-*チャット無限スクロール用のカスタムフック
-*
-*/
+/*
+ *チャット無限スクロール用のカスタムフック
+ *
+ */
 const useInfiniteQueryChat = () => {
   const {
     data,
@@ -17,18 +17,21 @@ const useInfiniteQueryChat = () => {
     hasPreviousPage,
     fetchPreviousPage,
     fetchNextPage,
-  } = useInfiniteQuery(CacheName.CHATMESSAGELIST, async ({pageParam = 0}) => {
-    const res = await getChatMessageList({pageParam});
-    return res;
-  },
-  {
-    getNextPageParam: (lastPage) => {
-      return lastPage.nextPage ?? undefined;
+  } = useInfiniteQuery(
+    CacheName.CHATMESSAGELIST,
+    async ({ pageParam = 0 }) => {
+      const res = await getChatMessageList({ pageParam });
+      return res;
     },
-    getPreviousPageParam: (prevPage) => {
-      return prevPage.prevCursor ?? undefined;
-    },
-  }
+    {
+      getNextPageParam: (lastPage) => {
+        return lastPage.nextPage ?? undefined;
+      },
+      getPreviousPageParam: (prevPage) => {
+        if (!prevPage.prevCursor.prevVisible) return undefined;
+        return prevPage.prevCursor ?? undefined;
+      },
+    }
   );
 
   return {
