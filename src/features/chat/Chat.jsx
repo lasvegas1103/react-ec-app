@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { auth } from "../../firebase";
 import useScrollPosition from "../../hooks/common/useScrollPosition";
 import useInfiniteQueryChat from "../../hooks/useInfiniteQueryChat";
-import useListenChatMessage from "../../hooks/common/useListenChatMessage";
+import useListenLatestChatMessage from "../../hooks/common/useListenLatestChatMessage";
 
 /*
  * チャット
@@ -12,8 +12,9 @@ const Chat = () => {
   const bottomRef = useRef(null);
   const { isScrollPosition, judgementScrollPosition } = useScrollPosition();
   const { data, hasPreviousPage, fetchPreviousPage } = useInfiniteQueryChat();
-  const { addChatMessage, listenChatMessage } = useListenChatMessage();
-  console.log(addChatMessage);
+  const { addLatestChatMessage, listenLatestChatMessage } =
+    useListenLatestChatMessage();
+
   useEffect(() => {
     // 最下部へ移動
     setTimeout(() => {
@@ -33,8 +34,8 @@ const Chat = () => {
       }
     }
 
-    // chatMessageリッスン
-    const unsubscribe = listenChatMessage();
+    // 最新のchatMessageリッスン
+    const unsubscribe = listenLatestChatMessage();
 
     return () => {
       // chatのリスナーでタッチ
@@ -45,7 +46,7 @@ const Chat = () => {
     fetchPreviousPage,
     hasPreviousPage,
     judgementScrollPosition,
-    listenChatMessage,
+    listenLatestChatMessage,
   ]);
 
   return (
@@ -66,9 +67,9 @@ const Chat = () => {
             </div>
           ))
         )}
-      {/* チャットメッセージリッスン */}
-      {addChatMessage.length > 0 &&
-        addChatMessage.map((data) => (
+      {/* 最新のチャットメッセージリッスン */}
+      {addLatestChatMessage.length > 0 &&
+        addLatestChatMessage.map((data) => (
           <div>
             <div
               key={data.id}
