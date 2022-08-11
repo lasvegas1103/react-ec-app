@@ -23,7 +23,7 @@ export const getChatMessageList = async ({ pageParam = 0 }) => {
   const docSnapShotAll = await getDocs(
     query(chatRef, orderBy("registdate_at"))
   );
-  const allCount = docSnapShotAll.docs.length - 1;
+  const allCount = docSnapShotAll.docs.length;
 
   // メッセージ取得
   prevVisible =

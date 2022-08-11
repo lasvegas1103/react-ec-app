@@ -24,6 +24,8 @@ const useInfiniteQueryChat = () => {
       return res;
     },
     {
+      staleTime: 0,
+      cacheTime: 0,
       getNextPageParam: (lastPage) => {
         return lastPage.nextPage ?? undefined;
       },

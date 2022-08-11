@@ -1,25 +1,27 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { auth } from "../../firebase";
 import useScrollPosition from "../../hooks/common/useScrollPosition";
 import useInfiniteQueryChat from "../../hooks/useInfiniteQueryChat";
-// import useListenChatMessage from "../../hooks/common/useListenChatMessage";
+import useListenChatMessage from "../../hooks/common/useListenChatMessage";
 
 /*
  * チャット
  *
  */
 const Chat = () => {
-  console.log("ddd");
+  const bottomRef = useRef(null);
   const { isScrollPosition, judgementScrollPosition } = useScrollPosition();
   const { data, hasPreviousPage, fetchPreviousPage } = useInfiniteQueryChat();
-  // const { listenChatMessage, unsubscribe } = useListenChatMessage();
-  console.log(hasPreviousPage);
+  const { addChatMessage, listenChatMessage } = useListenChatMessage();
+  console.log(addChatMessage);
   useEffect(() => {
     // 最下部へ移動
-    const elem = document.documentElement;
-    const bottom = elem.scrollHeight - elem.clientHeight;
-    window.scroll(0, bottom);
+    setTimeout(() => {
+      bottomRef?.current?.scrollIntoView(false);
+    }, 500);
+  }, []);
 
+  useEffect(() => {
     // スクロール位置判定
     judgementScrollPosition();
 
@@ -31,16 +33,19 @@ const Chat = () => {
       }
     }
 
+    // chatMessageリッスン
+    const unsubscribe = listenChatMessage();
+
     return () => {
       // chatのリスナーでタッチ
-      // unsubscribe();
+      unsubscribe();
     };
   }, [
     isScrollPosition,
     fetchPreviousPage,
     hasPreviousPage,
     judgementScrollPosition,
-    // unsubscribe,
+    listenChatMessage,
   ]);
 
   return (
@@ -61,6 +66,21 @@ const Chat = () => {
             </div>
           ))
         )}
+      {/* チャットメッセージリッスン */}
+      {addChatMessage.length > 0 &&
+        addChatMessage.map((data) => (
+          <div>
+            <div
+              key={data.id}
+              className={`msg ${
+                data.userID === auth.currentUser.uid ? "sent" : "received"
+              }`}
+            >
+              {data.message}
+            </div>
+          </div>
+        ))}
+      <div ref={bottomRef} />
     </div>
   );
 };
