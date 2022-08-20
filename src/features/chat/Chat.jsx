@@ -1,8 +1,11 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { auth } from "../../firebase";
+import Header from "../../components/utils/Header";
+import SendMessage from "../../components/chat/SendMessage";
 import useScrollPosition from "../../hooks/common/useScrollPosition";
 import useInfiniteQueryChat from "../../hooks/useInfiniteQueryChat";
-import useListenLatestChatMessage from "../../hooks/common/useListenLatestChatMessage";
+import useListenLatestChatMessage from "../../hooks/chat/useListenLatestChatMessage";
+import useSendChatMessage from "../../hooks/chat/useSendChatMessage";
 
 /*
  * チャット
@@ -10,6 +13,8 @@ import useListenLatestChatMessage from "../../hooks/common/useListenLatestChatMe
  */
 const Chat = () => {
   const bottomRef = useRef(null);
+  const [chatMessage, setChatMessage] = useState("");
+  const { sendChatMessage } = useSendChatMessage();
   const { isScrollPosition, judgementScrollPosition } = useScrollPosition();
   const { data, hasPreviousPage, fetchPreviousPage } = useInfiniteQueryChat();
   const { addLatestChatMessage, listenLatestChatMessage } =
@@ -38,7 +43,7 @@ const Chat = () => {
     const unsubscribe = listenLatestChatMessage();
 
     return () => {
-      // chatのリスナーでタッチ
+      // chatのリスナーデタッチ
       unsubscribe();
     };
   }, [
@@ -50,38 +55,47 @@ const Chat = () => {
   ]);
 
   return (
-    <div className="msgs">
-      {/* 初期表示のN件分表示 */}
-      {data?.pages &&
-        data.pages.map((page) =>
-          page.chatMessageData.map((data) => (
+    <div>
+      <Header />
+      <div className="msgs">
+        {/* 初期表示のN件分表示 */}
+        {data?.pages &&
+          data.pages.map((page) =>
+            page.chatMessageData.map((data) => (
+              <div>
+                <div
+                  key={data.id}
+                  className={`msg ${
+                    data.userID === auth.currentUser.uid ? "sent" : "received"
+                  }`}
+                >
+                  <p>{data.message}</p>
+                </div>
+              </div>
+            ))
+          )}
+        {/* 最新のチャットメッセージリッスン */}
+        {addLatestChatMessage.length > 0 &&
+          addLatestChatMessage.map((data) => (
             <div>
               <div
-                key={data.id}
+                key={`latest ${data.id}`}
                 className={`msg ${
                   data.userID === auth.currentUser.uid ? "sent" : "received"
                 }`}
               >
-                {data.message}
+                <p>{data.message}</p>
               </div>
             </div>
-          ))
-        )}
-      {/* 最新のチャットメッセージリッスン */}
-      {addLatestChatMessage.length > 0 &&
-        addLatestChatMessage.map((data) => (
-          <div>
-            <div
-              key={data.id}
-              className={`msg ${
-                data.userID === auth.currentUser.uid ? "sent" : "received"
-              }`}
-            >
-              {data.message}
-            </div>
-          </div>
-        ))}
-      <div ref={bottomRef} />
+          ))}
+        <div ref={bottomRef} />
+      </div>
+      {/* メッセージ送信ボタン */}
+      <SendMessage
+        chatMessage={chatMessage}
+        setChatMessage={setChatMessage}
+        sendChatMessage={sendChatMessage}
+      />
     </div>
   );
 };
