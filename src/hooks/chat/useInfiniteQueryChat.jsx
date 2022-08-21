@@ -1,12 +1,12 @@
 import { useInfiniteQuery } from "react-query";
-import { getChatMessageList } from "../model/Chat";
-import { CacheName } from "../config/constants";
+import { getChatMessageList } from "../../model/Chat";
+import { CacheName } from "../../config/constants";
 
 /*
  *チャット無限スクロール用のカスタムフック
  *
  */
-const useInfiniteQueryChat = () => {
+const useInfiniteQueryChat = (groupID) => {
   const {
     data,
     isLoading,
@@ -20,7 +20,7 @@ const useInfiniteQueryChat = () => {
   } = useInfiniteQuery(
     CacheName.CHATMESSAGELIST,
     async ({ pageParam = 0 }) => {
-      const res = await getChatMessageList({ pageParam });
+      const res = await getChatMessageList({ pageParam, groupID });
       return res;
     },
     {

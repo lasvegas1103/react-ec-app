@@ -28,7 +28,7 @@ const Router = () => {
         />
         <Route exact path="/user/favoritelist" component={FavoriteDetail} />
         <Route exact path="/cart" component={Cart} />
-        <Route exact path="/chat" component={Chat} />
+        <Route exact path="/chat/:groupID?" component={Chat} />
       </Auth>
     </Switch>
   );

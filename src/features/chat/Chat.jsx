@@ -1,31 +1,37 @@
 import { useEffect, useRef, useState } from "react";
+import { useParams } from "react-router-dom";
 import { auth } from "../../firebase";
 import Header from "../../components/utils/Header";
 import SendMessage from "../../components/chat/SendMessage";
 import useScrollPosition from "../../hooks/common/useScrollPosition";
-import useInfiniteQueryChat from "../../hooks/useInfiniteQueryChat";
+import useInfiniteQueryChat from "../../hooks/chat/useInfiniteQueryChat";
 import useListenLatestChatMessage from "../../hooks/chat/useListenLatestChatMessage";
 import useSendChatMessage from "../../hooks/chat/useSendChatMessage";
+import useGetChatBotMessage from "../../hooks/chat/useGetChatBotMessage";
 
-/*
+/**
  * チャット
  *
  */
 const Chat = () => {
+  const urlParams = useParams();
+  const groupID = urlParams.groupID;
   const bottomRef = useRef(null);
   const [chatMessage, setChatMessage] = useState("");
   const { sendChatMessage } = useSendChatMessage();
+  const { getAndSaveBotMessage } = useGetChatBotMessage();
   const { isScrollPosition, judgementScrollPosition } = useScrollPosition();
-  const { data, hasPreviousPage, fetchPreviousPage } = useInfiniteQueryChat();
+  const { data, hasPreviousPage, fetchPreviousPage } =
+    useInfiniteQueryChat(groupID);
   const { addLatestChatMessage, listenLatestChatMessage } =
-    useListenLatestChatMessage();
+    useListenLatestChatMessage(groupID);
 
   useEffect(() => {
     // 最下部へ移動
     setTimeout(() => {
       bottomRef?.current?.scrollIntoView(false);
     }, 500);
-  }, []);
+  }, [listenLatestChatMessage]);
 
   useEffect(() => {
     // スクロール位置判定
@@ -93,8 +99,10 @@ const Chat = () => {
       {/* メッセージ送信ボタン */}
       <SendMessage
         chatMessage={chatMessage}
+        groupID={groupID}
         setChatMessage={setChatMessage}
         sendChatMessage={sendChatMessage}
+        getAndSaveBotMessage={getAndSaveBotMessage}
       />
     </div>
   );

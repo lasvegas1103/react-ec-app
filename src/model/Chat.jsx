@@ -1,4 +1,4 @@
-import { db } from "../firebase/index";
+import { db, auth } from "../firebase/index";
 import {
   collection,
   query,
@@ -6,6 +6,8 @@ import {
   startAt,
   limit,
   getDocs,
+  where,
+  addDoc,
 } from "firebase/firestore";
 import { MessageCount } from "../config/constants";
 
@@ -13,11 +15,12 @@ import { MessageCount } from "../config/constants";
  *チャットのメッセージを取得
  *
  */
-export const getChatMessageList = async ({ pageParam = 0 }) => {
+export const getChatMessageList = async ({ pageParam = 0, groupID }) => {
   let pageCount = pageParam?.pageCount ?? 1;
   let prevVisible = pageParam?.prevVisible ?? null;
 
-  const chatRef = collection(db, "chat", "t4MxssSHoO4bv4fmNYAv", "message");
+  // 対象のmessageコレクション参照
+  const chatRef = collection(db, "chat", groupID, "message");
 
   // 全体の件数が取得したい
   const docSnapShotAll = await getDocs(
@@ -53,4 +56,35 @@ export const getChatMessageList = async ({ pageParam = 0 }) => {
     chatMessageData,
     prevCursor: { prevVisible: prevVisible, pageCount: pageCount + 1 },
   };
+};
+
+/**
+ * groupID取得
+ *
+ */
+export const getGroupIDAction = async () => {
+  const chatQuery = query(
+    collection(db, "chat"),
+    where("userIDList", "array-contains", auth.currentUser.uid)
+  );
+  const chatDocsSnap = await getDocs(chatQuery);
+
+  let groupID = "";
+  if (chatDocsSnap.docs.length > 0) {
+    chatDocsSnap.forEach((doc) => {
+      groupID = doc.id;
+    });
+  } else {
+    // groupIDが存在しない場合、ドキュメント作成
+    const chatData = {
+      groupName: "botRomm",
+      userIDList: [auth.currentUser.uid],
+    };
+
+    const chatRef = collection(db, "chat");
+    const chatDocRef = await addDoc(chatRef, chatData);
+    groupID = chatDocRef.id;
+  }
+
+  return groupID;
 };

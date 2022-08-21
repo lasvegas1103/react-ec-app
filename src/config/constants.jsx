@@ -11,6 +11,7 @@ export const CacheName = {
   PRODUCTDETAIL: "productDetail",
   FAVORITELIST: "favoriteList",
   CHATMESSAGELIST: "chatMessageList",
+  CHATGROUPID: "chatGroupID",
 };
 
 /* チャットメッセージ件数 */

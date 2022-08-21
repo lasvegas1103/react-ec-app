@@ -13,13 +13,30 @@ const CTextField = styled(TextField)(({ theme }) => ({
   zIndex: "1",
 }));
 
-/*
+/**
  * チャットメッセージ送信ボタン
  *
  */
 const SendMessage = React.memo((props) => {
   const handleChange = (event) => {
     props.setChatMessage(event.target.value);
+  };
+
+  const handleClick = () => {
+    // ユーザーのメッセージを保存
+    props.sendChatMessage({
+      chatMessage: props.chatMessage,
+      groupID: props.groupID,
+    });
+
+    // botのメッセージ取得＆保存
+    props.getAndSaveBotMessage({
+      chatMessage: props.chatMessage,
+      groupID: props.groupID,
+    });
+
+    // message初期化
+    props.setChatMessage("");
   };
 
   return (
@@ -36,11 +53,7 @@ const SendMessage = React.memo((props) => {
       InputProps={{
         endAdornment: (
           <InputAdornment position="end">
-            <IconButton
-              color="primary"
-              size="large"
-              onClick={() => props.sendChatMessage(props.chatMessage)}
-            >
+            <IconButton color="primary" size="large" onClick={handleClick}>
               <SendIcon />
             </IconButton>
           </InputAdornment>
