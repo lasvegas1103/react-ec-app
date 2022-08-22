@@ -30,7 +30,7 @@ const CCardMedia = styled(CardMedia)({
 const ProductCard = (props) => {
   const productData = props.productData;
   return (
-    <Card sx={{ height: 300, width: 200, maxWidth: 350, minWidth: 150 }}>
+    <Card>
       <CardActionArea component={Link} to={`/product/detail/${productData.id}`}>
         <CCardMedia>
           <Cimage

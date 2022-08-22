@@ -35,11 +35,17 @@ const ProductList = () => {
       {isSignup && <ModalCm />}
       <Header />
       <BoxSx>
-        <Grid container justifyContent="center" spacing={3}>
+        <Grid
+          container
+          spacing={3}
+          columns={{ xs: 12, sm: 30, md: 30 }}
+          columnSpacing={2}
+          sx={{ width: "90%", margin: "0 auto" }}
+        >
           {data?.pages &&
             data.pages.map((page) =>
               page.productData.map((d) => (
-                <Grid item sm={2.5} xs={2.5} key={d.id}>
+                <Grid item spacing={5} xs={6} sm={6} md={6} key={d.id}>
                   <ProductCard productData={d} />
                 </Grid>
               ))

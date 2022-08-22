@@ -8,6 +8,7 @@ import DeleteIcon from "../../components/product/DeleteIcon";
 import Header from "../../components/utils/Header";
 import BoxSx from "../../components/MaterialUI/BoxSx";
 import { Grid } from "@mui/material";
+import { styled } from "@mui/material/styles";
 
 const FavoriteDetail = () => {
   // キャッシュからUID取得
@@ -37,12 +38,18 @@ const FavoriteDetail = () => {
     <div>
       <Header />
       <BoxSx>
-        <Grid container justifyContent="center" spacing={5}>
+        <Grid
+          container
+          spacing={3}
+          columns={{ xs: 12, sm: 30, md: 30 }}
+          columnSpacing={2}
+          sx={{ width: "90%", margin: "0 auto" }}
+        >
           {data?.pages &&
             data.pages.map((page) =>
               page.productData.map((d) => (
-                <Grid item sm={2.5} xs={2.5} key={d.id}>
-                  <div style={{ textAlign: "right" }}>
+                <Grid item spacing={5} xs={6} sm={6} md={6} key={d.id}>
+                  <div style={{ textAlign: "right", marginBottom: "-1rem" }}>
                     <DeleteIcon
                       fontSize="small"
                       color="action"

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import { styled, alpha } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -120,8 +120,16 @@ const Header = () => {
             <Typography
               variant="h6"
               noWrap
-              component="div"
-              sx={{ display: { xs: "none", sm: "block" } }}
+              component={Link}
+              to={"/product/list/"}
+              sx={{
+                display: {
+                  xs: "none",
+                  sm: "block",
+                  textDecoration: "none",
+                  color: "black",
+                },
+              }}
             >
               ECサイト（仮）
             </Typography>
