@@ -3,13 +3,17 @@ import { useInView } from "react-intersection-observer";
 import { useQueryClient } from "react-query";
 import { useInfiniteProductListByFavQuery } from "../../hooks/productHooks";
 import { useDeleteFavorite } from "../../hooks/userMutationHooks";
+import { Grid } from "@mui/material";
 import ProductCard from "../../components/product/ProductCard";
 import DeleteIcon from "../../components/product/DeleteIcon";
 import Header from "../../components/utils/Header";
 import BoxSx from "../../components/MaterialUI/BoxSx";
-import { Grid } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import Title from "../../components/MaterialUI/Title";
 
+/**
+ * お気に入り一覧画面
+ * @returns
+ */
 const FavoriteDetail = () => {
   // キャッシュからUID取得
   const queryClient = useQueryClient();
@@ -38,6 +42,12 @@ const FavoriteDetail = () => {
     <div>
       <Header />
       <BoxSx>
+        <Title
+          title="お気に入り"
+          component="div"
+          variant="h4"
+          color="textSecondary"
+        />
         <Grid
           container
           spacing={3}
@@ -45,7 +55,7 @@ const FavoriteDetail = () => {
           columnSpacing={2}
           sx={{ width: "90%", margin: "0 auto" }}
         >
-          {data?.pages &&
+          {data?.pages[0]?.productData?.length > 0 ? (
             data.pages.map((page) =>
               page.productData.map((d) => (
                 <Grid item spacing={5} xs={6} sm={6} md={6} key={d.id}>
@@ -59,7 +69,10 @@ const FavoriteDetail = () => {
                   <ProductCard productData={d} />
                 </Grid>
               ))
-            )}
+            )
+          ) : (
+            <Grid item>お気に入りにアイテムの登録がありません</Grid>
+          )}
         </Grid>
         <div ref={ref}>{isFetchingNextPage && "Loading..."}</div>
       </BoxSx>

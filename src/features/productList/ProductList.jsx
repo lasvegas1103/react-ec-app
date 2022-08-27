@@ -4,11 +4,12 @@ import { useInView } from "react-intersection-observer";
 import useInfiniteQueryProductList from "../../hooks/useInfiniteQueryProductList";
 import useChatQuery from "../../hooks/chat/useChatQuery";
 import ProductCard from "../../components/product/ProductCard";
-import { Grid } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import Header from "../../components/utils/Header";
 import BoxSx from "../../components/MaterialUI/BoxSx";
 import ModalCm from "../../components/MaterialUI/ModalCm";
 import FloatingActionButton from "../../components/MaterialUI/FloatingActionButton";
+import Title from "../../components/MaterialUI/Title";
 
 /**
  * 商品一覧画面
@@ -35,6 +36,12 @@ const ProductList = () => {
       {isSignup && <ModalCm />}
       <Header />
       <BoxSx>
+        <Title
+          title="商品一覧"
+          component="div"
+          variant="h4"
+          color="textSecondary"
+        />
         <Grid
           container
           spacing={3}

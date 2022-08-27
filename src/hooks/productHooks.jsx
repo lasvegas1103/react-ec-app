@@ -63,6 +63,8 @@ export const useInfiniteProductListByFavQuery = (uid) => {
       getNextPageParam: (lastPage) => {
         return lastPage.nextPage ?? undefined;
       },
+      staleTime: 0,
+      cacheTime: 0,
     },
     errText: "商品情報を取得できませんでした",
   });
@@ -77,7 +79,15 @@ export const useInfiniteProductListByFavQuery = (uid) => {
     //　お気に入りに追加している商品IDを取得
     const userFavoriteRef = query(collection(db, "users", uid, "userFavorite"));
     const querySnapshot = await getDocs(userFavoriteRef);
-    let productListOfUserfavData = [];
+    const productListOfUserfavData = [];
+    const productData = [];
+    let lastVisible = 0;
+
+    // "userFavorite"が取得できないときは、ここでリターン
+    if (querySnapshot.empty) {
+      return { productData, lastVisible };
+    }
+
     querySnapshot.forEach((doc) => {
       productListOfUserfavData.push(doc.data().productId);
     });
@@ -93,9 +103,8 @@ export const useInfiniteProductListByFavQuery = (uid) => {
     const docSnapShot = await getDocs(productRef);
 
     // クエリカーソルに使用
-    const lastVisible = docSnapShot.docs[docSnapShot.docs.length - 1];
+    lastVisible = docSnapShot.docs[docSnapShot.docs.length - 1];
 
-    let productData = [];
     docSnapShot.forEach((doc) => {
       productData.push(doc.data());
     });

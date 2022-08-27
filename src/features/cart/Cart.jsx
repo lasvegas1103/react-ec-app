@@ -1,14 +1,7 @@
-import React, { useState } from "react";
-import {
-  Grid,
-  Button,
-  InputLabel,
-  MenuItem,
-  FormControl,
-  Select,
-} from "@mui/material";
+import React, { useEffect } from "react";
+import { useQueryClient } from "react-query";
+import { Grid, Button } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Typography } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -19,9 +12,10 @@ import { styled } from "@mui/material/styles";
 import Header from "../../components/utils/Header";
 import BoxSx from "../../components/MaterialUI/BoxSx";
 import BasicSelect from "../../components/utils/BasicSelect";
-import { useQueryClient } from "react-query";
-import { useUserCartListQuery } from "../../hooks/userHooks";
-import { useDeleteCart } from "../../hooks/userMutationHooks";
+import Title from "../../components/MaterialUI/Title";
+import { useUserCartListQuery } from "../../hooks/cart/useUserCartListQuery";
+import { useDeleteCart } from "../../hooks/cart/useDeleteCart";
+import useCalcTotalAmount from "../../hooks/cart/useCalcTotalAmount";
 
 const Cimage = styled("img")({
   height: "auto",
@@ -43,13 +37,16 @@ const CCardMedia = styled("div")({
   margin: "0",
 });
 
-/*
-カート詳細画面 
+/**
+ * カート詳細画面
+ * @returns
  */
 const Cart = () => {
   // キャッシュからUID取得
   const queryClient = useQueryClient();
   const { uid } = queryClient.getQueryData("loginData");
+  // 合計金額用のカスタムフック
+  const { totalAmount, calcTotalAmount } = useCalcTotalAmount();
   // ユーザーに紐づくカート情報を取得
   const { getUserCartList } = useUserCartListQuery({
     uid: uid,
@@ -71,16 +68,28 @@ const Cart = () => {
     });
   };
 
+  useEffect(() => {
+    //合計金額を計算
+    calcTotalAmount();
+  }, [calcTotalAmount, totalAmount]);
+
   return (
     <div>
       <Header />
       <BoxSx>
-        <Grid container>
+        {/*  タイトル */}
+        <Title
+          title="ショッピングカート"
+          component="div"
+          variant="h4"
+          color="textSecondary"
+        />
+        <Grid
+          container
+          columnSpacing={2}
+          sx={{ width: "90%", margin: "0 auto" }}
+        >
           <Grid item xs={7}>
-            {/*  タイトル */}
-            <Typography variant="h5" gutterBottom component="div">
-              ショッピングカート
-            </Typography>
             {/*  カート詳細 */}
             <TableContainer component={Paper}>
               <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -107,7 +116,6 @@ const Cart = () => {
                         <TableCell align="left" style={{ width: "7rem" }}>
                           <div>{row.title}</div>
                           <div>サイズ：{row.sizeType}</div>
-                          <div>残り：{row.quantity}点</div>
                         </TableCell>
                         {/*  価格 */}
                         <TableCell align="left" style={{ width: "4rem" }}>
@@ -153,6 +161,10 @@ const Cart = () => {
                 </TableBody>
               </Table>
             </TableContainer>
+            <div>
+              <div>商品合計</div>
+              <div>{totalAmount}</div>
+            </div>
           </Grid>
           <Grid item xs={5}>
             test2

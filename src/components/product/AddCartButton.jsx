@@ -43,7 +43,7 @@ const AddCartButton = ({ productData, rowSizeType, rowQuantity }) => {
       title: productData.title,
       price: productData.price,
       sizeType: rowSizeType,
-      quantity: rowQuantity,
+      quantity: 1,
     };
     if (uid)
       addCart.mutate(addCartData, {

@@ -7,7 +7,8 @@ export default function BoxSx(props) {
       sx={{
         width: "100%",
         height: "100%",
-        marginTop: "6rem",
+        marginTop: "7rem",
+        position: "absolute",
         justifyContent: "center",
       }}
     >

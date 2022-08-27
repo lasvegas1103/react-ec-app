@@ -68,32 +68,6 @@ export const useUserCartQuery = (props) => {
 };
 
 /**
- * カート詳細画面でカートリスト取得
- */
-export const useUserCartListQuery = (props) => {
-  const getUserCartList = useQueryWrapper({
-    queryKey: CacheName.USERCARTLIST,
-    deps: [],
-    func: () => getUserCartListAction(props),
-    options: {},
-    errText: "カート情報の取得に失敗しました",
-  });
-
-  const getUserCartListAction = async (props) => {
-    // 対象商品に対してお気に入りしていたらデータ取得
-    const q = query(collection(db, "users", props.uid, "userCart"));
-    let cartData = [];
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-      cartData.push(doc.data());
-    });
-    return cartData;
-  };
-
-  return { getUserCartList };
-};
-
-/**
  * グロナビのお気に入り件数取得
  */
 export const useUserFavCntQuery = (props) => {

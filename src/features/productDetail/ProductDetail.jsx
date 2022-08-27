@@ -11,6 +11,7 @@ import { useUpdataUnRead } from "../../hooks/userMutationHooks";
 import { useUtilContext } from "../../context/UtilContext";
 import SwiperCm from "../../components/product/SwiperCm";
 import ProductDetailMain from "../../components/product/ProductDetailMain";
+import CompanyTitle from "../../components/MaterialUI/CompanyTitle";
 
 /* 商品詳細画面 */
 const ProductDetail = () => {
@@ -49,6 +50,12 @@ const ProductDetail = () => {
   return (
     <div>
       <Header />
+      <CompanyTitle
+        title="会社名"
+        component="div"
+        variant="h6"
+        color="textSecondary"
+      />
       <BoxSx>
         <ToastContainer />
         {fetchProductDetail.status === "success" &&
@@ -56,8 +63,8 @@ const ProductDetail = () => {
           getUserFavorite.status === "success" && (
             <Grid
               container
-              rowSpacing={1}
-              columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+              columnSpacing={2}
+              sx={{ width: "90%", margin: "0 auto" }}
             >
               <Grid item xs={6}>
                 <div>
