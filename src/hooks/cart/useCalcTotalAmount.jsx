@@ -12,7 +12,7 @@ const useCalcTotalAmount = () => {
   const productDataList = queryClient.getQueryData("userCartList");
   // 合計金額計算
   const calcTotalAmount = useCallback(() => {
-    if (!productDataList) return;
+    if (!productDataList || productDataList?.cartData?.length === 0) return;
 
     let totalAmount = 0;
     productDataList.forEach((data) => {

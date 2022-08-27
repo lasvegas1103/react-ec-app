@@ -17,26 +17,6 @@ import { useUserCartListQuery } from "../../hooks/cart/useUserCartListQuery";
 import { useDeleteCart } from "../../hooks/cart/useDeleteCart";
 import useCalcTotalAmount from "../../hooks/cart/useCalcTotalAmount";
 
-const Cimage = styled("img")({
-  height: "auto",
-  width: "auto",
-  maxWidth: "100%",
-  maxHeight: "100%",
-  position: "absolute",
-  top: "0",
-  bottom: "0",
-  left: "0",
-  right: "0",
-  margin: "auto",
-});
-
-const CCardMedia = styled("div")({
-  height: "150px",
-  width: "125px",
-  position: "relative",
-  margin: "0",
-});
-
 /**
  * カート詳細画面
  * @returns
@@ -161,10 +141,9 @@ const Cart = () => {
                 </TableBody>
               </Table>
             </TableContainer>
-            <div>
-              <div>商品合計</div>
-              <div>{totalAmount}</div>
-            </div>
+            <Total>
+              <TotalAmount>商品合計：¥{totalAmount}</TotalAmount>
+            </Total>
           </Grid>
           <Grid item xs={5}>
             test2
@@ -176,3 +155,33 @@ const Cart = () => {
 };
 
 export default Cart;
+
+/** CSS */
+const Cimage = styled("img")({
+  height: "auto",
+  width: "auto",
+  maxWidth: "100%",
+  maxHeight: "100%",
+  position: "absolute",
+  top: "0",
+  bottom: "0",
+  left: "0",
+  right: "0",
+  margin: "auto",
+});
+
+const CCardMedia = styled("div")({
+  height: "150px",
+  width: "125px",
+  position: "relative",
+  margin: "0",
+});
+
+const Total = styled("div")({
+  // display: "flex",
+  textAlign: "right",
+});
+
+const TotalAmount = styled("p")({
+  paddingLeft: "25rem",
+});
