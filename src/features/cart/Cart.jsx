@@ -1,21 +1,15 @@
 import React, { useEffect } from "react";
 import { useQueryClient } from "react-query";
-import { Grid, Button } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
+import { Grid } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Header from "../../components/utils/Header";
 import BoxSx from "../../components/MaterialUI/BoxSx";
-import BasicSelect from "../../components/utils/BasicSelect";
+import CartDetailLeft from "../../components/cart/CartDetailLeft";
 import Title from "../../components/MaterialUI/Title";
 import { useUserCartListQuery } from "../../hooks/cart/useUserCartListQuery";
 import { useDeleteCart } from "../../hooks/cart/useDeleteCart";
 import useCalcTotalAmount from "../../hooks/cart/useCalcTotalAmount";
+import { useUpdateCart } from "../../hooks/cart/useUpdateCart";
 
 /**
  * カート詳細画面
@@ -25,7 +19,7 @@ const Cart = () => {
   // キャッシュからUID取得
   const queryClient = useQueryClient();
   const { uid } = queryClient.getQueryData("loginData");
-  // 合計金額用のカスタムフック
+  // 合計金額を計算
   const { totalAmount, calcTotalAmount } = useCalcTotalAmount();
   // ユーザーに紐づくカート情報を取得
   const { getUserCartList } = useUserCartListQuery({
@@ -34,9 +28,18 @@ const Cart = () => {
   // カートの商品を削除
   const { deleteCart } = useDeleteCart();
 
-  // 数量を選択
-  const handleChangeCnt = (event) => {
-    // setQuantity(event.target.value);
+  // カートの商品を更新
+  const { updateCart } = useUpdateCart();
+
+  // 数量を選択して商品情報を更新
+  const handleChangeCntAndUpdateCart = async ({ productId, sizeType, e }) => {
+    const quantity = e.target.value;
+    updateCart.mutate({
+      uid: uid,
+      productId: productId,
+      sizeType: sizeType,
+      quantity: quantity,
+    });
   };
 
   // カートから商品を削除
@@ -70,80 +73,13 @@ const Cart = () => {
           sx={{ width: "90%", margin: "0 auto" }}
         >
           <Grid item xs={7}>
-            {/*  カート詳細 */}
-            <TableContainer component={Paper}>
-              <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                <TableBody>
-                  {getUserCartList.data?.length > 0 ? (
-                    getUserCartList.data.map((row) => (
-                      <TableRow
-                        key={row.productId + row.sizeType}
-                        sx={{
-                          "&:last-child td, &:last-child th": { border: 0 },
-                        }}
-                      >
-                        {/*  画像 */}
-                        <TableCell
-                          component="th"
-                          scope="row"
-                          style={{ width: "125px" }}
-                        >
-                          <CCardMedia>
-                            <Cimage src={row.images[0]?.path} alt={row.title} />
-                          </CCardMedia>
-                        </TableCell>
-                        {/*  タイトルなど */}
-                        <TableCell align="left" style={{ width: "7rem" }}>
-                          <div>{row.title}</div>
-                          <div>サイズ：{row.sizeType}</div>
-                        </TableCell>
-                        {/*  価格 */}
-                        <TableCell align="left" style={{ width: "4rem" }}>
-                          ¥{row.price}
-                        </TableCell>
-                        {/*  個数 */}
-                        <TableCell align="left" style={{ width: "3rem" }}>
-                          <BasicSelect
-                            func={handleChangeCnt}
-                            cnt={row.quantity}
-                            name={"数量"}
-                            uniqueName={row.productId + row.sizeType}
-                          />
-                        </TableCell>
-                        {/*  削除ボタン */}
-                        <TableCell align="left" style={{ width: "3rem" }}>
-                          <Button
-                            variant="outlined"
-                            size="small"
-                            startIcon={<DeleteIcon />}
-                            onClick={() =>
-                              handleDeleteCart({
-                                productId: row.productId,
-                                sizeType: row.sizeType,
-                              })
-                            }
-                          >
-                            削除
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  ) : (
-                    <TableRow
-                      sx={{
-                        "&:last-child td, &:last-child th": { border: 0 },
-                        boxShadow: 0,
-                      }}
-                    >
-                      <TableCell>カートに商品がありません</TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            <Total>
-              <TotalAmount>商品合計：¥{totalAmount}</TotalAmount>
-            </Total>
+            {/*  カート詳細Left */}
+            <CartDetailLeft
+              getUserCartList={getUserCartList}
+              totalAmount={totalAmount}
+              handleChangeCntAndUpdateCart={handleChangeCntAndUpdateCart}
+              handleDeleteCart={handleDeleteCart}
+            />
           </Grid>
           <Grid item xs={5}>
             test2
@@ -155,33 +91,3 @@ const Cart = () => {
 };
 
 export default Cart;
-
-/** CSS */
-const Cimage = styled("img")({
-  height: "auto",
-  width: "auto",
-  maxWidth: "100%",
-  maxHeight: "100%",
-  position: "absolute",
-  top: "0",
-  bottom: "0",
-  left: "0",
-  right: "0",
-  margin: "auto",
-});
-
-const CCardMedia = styled("div")({
-  height: "150px",
-  width: "125px",
-  position: "relative",
-  margin: "0",
-});
-
-const Total = styled("div")({
-  // display: "flex",
-  textAlign: "right",
-});
-
-const TotalAmount = styled("p")({
-  paddingLeft: "25rem",
-});

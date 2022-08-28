@@ -1,13 +1,18 @@
 import { NativeSelect, InputLabel, FormControl } from "@mui/material";
 
-const BasicSelect = ({ func, cnt, name, uniqueName }) => {
+/**
+ * 数量選択
+ * @param {*} param0
+ * @returns
+ */
+const BasicSelect = ({ func, cnt, name, uniqueName, defaultValue }) => {
   return (
     <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
       <InputLabel variant="standard" htmlFor="uncontrolled-native">
         {name}
       </InputLabel>
       <NativeSelect
-        defaultValue={1}
+        defaultValue={defaultValue}
         inputProps={{
           name: name,
           id: "uncontrolled-native",

@@ -12,9 +12,13 @@ const useCalcTotalAmount = () => {
   const productDataList = queryClient.getQueryData("userCartList");
   // 合計金額計算
   const calcTotalAmount = useCallback(() => {
-    if (!productDataList || productDataList?.cartData?.length === 0) return;
-
     let totalAmount = 0;
+    // 商品が追加されていない場合、0円で返す
+    if (!productDataList || productDataList?.cartData?.length === 0) {
+      setTotalAmount(totalAmount);
+      return;
+    }
+
     productDataList.forEach((data) => {
       totalAmount += parseInt(data.quantity) * parseInt(data.price);
     });

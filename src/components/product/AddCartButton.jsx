@@ -43,6 +43,7 @@ const AddCartButton = ({ productData, rowSizeType, rowQuantity }) => {
       title: productData.title,
       price: productData.price,
       sizeType: rowSizeType,
+      remainingQuantity: rowQuantity,
       quantity: 1,
     };
     if (uid)

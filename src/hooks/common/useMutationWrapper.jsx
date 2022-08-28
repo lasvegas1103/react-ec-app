@@ -17,7 +17,6 @@ const useMutationWrapper = ({ func, options, errText = "" }) => {
       console.error(e);
     }
   }, options);
-
   return result;
 };
 
