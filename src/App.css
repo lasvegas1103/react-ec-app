@@ -78,10 +78,11 @@
 }
 
 .msgs {
+  height: 100%;
+  margin-top: 5rem;
   margin-bottom: 55px;
   display: flex;
   flex-direction: column;
-  background-color: #93aad4;
 }
 
 /* img {

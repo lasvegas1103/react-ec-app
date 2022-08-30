@@ -30,6 +30,7 @@ const Router = () => {
         <Route exact path="/cart" component={Cart} />
         <Route exact path="/chat/:groupID?" component={Chat} />
       </Auth>
+      <Route path="*">{<div>ページが見つかりません！（簡易版）</div>}</Route>
     </Switch>
   );
 };

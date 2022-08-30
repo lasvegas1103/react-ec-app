@@ -18,6 +18,7 @@ import { MessageCount } from "../config/constants";
 export const getChatMessageList = async ({ pageParam = 0, groupID }) => {
   let pageCount = pageParam?.pageCount ?? 1;
   let prevVisible = pageParam?.prevVisible ?? null;
+  const chatMessageData = [];
 
   // 対象のmessageコレクション参照
   const chatRef = collection(db, "chat", groupID, "message");
@@ -26,13 +27,20 @@ export const getChatMessageList = async ({ pageParam = 0, groupID }) => {
   const docSnapShotAll = await getDocs(
     query(chatRef, orderBy("registdate_at"))
   );
+  // 0件の場合ここで返す
+  if (docSnapShotAll.empty) {
+    return {
+      chatMessageData,
+      prevCursor: { prevVisible: null, pageCount: 0 },
+    };
+  }
   const allCount = docSnapShotAll.docs.length;
+  const defaultCursor =
+    MessageCount >= allCount ? 0 : docSnapShotAll.docs[allCount - MessageCount];
 
   // メッセージ取得
-  prevVisible =
-    prevVisible === null
-      ? docSnapShotAll.docs[allCount - MessageCount]
-      : prevVisible;
+  prevVisible = prevVisible === null ? defaultCursor : prevVisible;
+  console.log(prevVisible);
   const q = query(
     chatRef,
     orderBy("registdate_at"),
@@ -47,7 +55,6 @@ export const getChatMessageList = async ({ pageParam = 0, groupID }) => {
     (docSnapShotForMessage.docs.length - 1) -
     MessageCount * pageCount;
   prevVisible = cursor >= 0 ? docSnapShotAll.docs[cursor] : null;
-  const chatMessageData = [];
   docSnapShotForMessage.forEach((doc) => {
     chatMessageData.push(doc.data());
   });

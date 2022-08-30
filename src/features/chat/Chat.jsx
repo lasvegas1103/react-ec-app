@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { auth } from "../../firebase";
 import Header from "../../components/utils/Header";
 import SendMessage from "../../components/chat/SendMessage";
+import BoxSx from "../../components/MaterialUI/BoxSx";
 import useScrollPosition from "../../hooks/common/useScrollPosition";
 import useInfiniteQueryChat from "../../hooks/chat/useInfiniteQueryChat";
 import useListenLatestChatMessage from "../../hooks/chat/useListenLatestChatMessage";
