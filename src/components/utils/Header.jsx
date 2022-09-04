@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import { useHistory, Link } from "react-router-dom";
 import { styled, alpha } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
@@ -19,6 +19,130 @@ import { useUserFavCntQuery } from "../../hooks/userHooks";
 import { useUserCartCntQuery } from "../../hooks/userHooks";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 
+/**
+ * ヘッダー（ログイン）
+ * @returns
+ */
+const Header = () => {
+  const history = useHistory();
+  // キャッシュからUID取得
+  const queryClient = useQueryClient();
+  const loginData = queryClient.getQueryData("loginData");
+  // お気に入り件数取得
+  const { getUserFavoriteCnt } = useUserFavCntQuery({ uid: loginData?.uid });
+  // カート件数取得
+  const { getUserCartCnt } = useUserCartCntQuery({ uid: loginData?.uid });
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const isMenuOpen = Boolean(anchorEl);
+
+  // プロフィールメニューを開く
+  const handleProfileMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  // プロフィールメニュー > メニューを閉じる
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const menuId = "primary-search-account-menu";
+  // プロフィールメニュー
+  const renderMenu = (
+    <Menu
+      anchorEl={anchorEl}
+      id={menuId}
+      keepMounted
+      open={isMenuOpen}
+      onClose={handleMenuClose}
+    >
+      <MenuItem onClick={() => history.push("/myAccount/myProfile")}>
+        登録情報
+      </MenuItem>
+      <MenuItem onClick={handleMenuClose}>ログアウト</MenuItem>
+    </Menu>
+  );
+
+  return (
+    <Box>
+      <ThemeProvider theme={theme}>
+        <AppBar position="fixed">
+          <Toolbar>
+            {/*  サイト名 */}
+            <Typography
+              variant="h6"
+              noWrap
+              component={Link}
+              to={"/product/list/"}
+              sx={{
+                display: {
+                  xs: "none",
+                  sm: "block",
+                  textDecoration: "none",
+                  color: "black",
+                },
+              }}
+            >
+              ECサイト（仮）
+            </Typography>
+            {/*  検索 */}
+            <Search>
+              <SearchIconWrapper>
+                <SearchIcon />
+              </SearchIconWrapper>
+              <StyledInputBase
+                placeholder="検索…"
+                inputProps={{ "aria-label": "search" }}
+              />
+            </Search>
+            <Box sx={{ flexGrow: 1 }} />
+            <Box sx={{ display: { xs: "none", sm: "flex", md: "flex" } }}>
+              {/*  カートアイコン */}
+              <IconButton
+                size="large"
+                aria-label="show 4 new mails"
+                color="inherit"
+                onClick={() => history.push("/cart")}
+              >
+                <Badge badgeContent={getUserCartCnt.data} color="error">
+                  <ShoppingCartIcon />
+                </Badge>
+              </IconButton>
+              {/*  お気に入りアイコン */}
+              <IconButton
+                size="large"
+                aria-label="show 3 new notifications"
+                color="inherit"
+                onClick={() => history.push("/user/favoritelist/")}
+              >
+                <Badge badgeContent={getUserFavoriteCnt.data} color="error">
+                  <FavoriteIcon />
+                </Badge>
+              </IconButton>
+              {/*  アカウントアイコン */}
+              <IconButton
+                size="large"
+                edge="end"
+                aria-label="account of current user"
+                aria-controls={menuId}
+                aria-haspopup="true"
+                onClick={handleProfileMenuOpen}
+                color="inherit"
+              >
+                <AccountCircle />
+              </IconButton>
+            </Box>
+          </Toolbar>
+        </AppBar>
+        {renderMenu}
+      </ThemeProvider>
+    </Box>
+  );
+};
+
+export default Header;
+
+/* CSS */
 const theme = createTheme({
   palette: {
     primary: {
@@ -67,125 +191,3 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
   },
 }));
-
-const Header = () => {
-  const history = useHistory();
-  // キャッシュからUID取得
-  const queryClient = useQueryClient();
-  const loginData = queryClient.getQueryData("loginData");
-  // お気に入り件数取得
-  const { getUserFavoriteCnt } = useUserFavCntQuery({ uid: loginData?.uid });
-  // カート件数取得
-  const { getUserCartCnt } = useUserCartCntQuery({ uid: loginData?.uid });
-
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const isMenuOpen = Boolean(anchorEl);
-
-  const handleProfileMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
-
-  const menuId = "primary-search-account-menu";
-  const renderMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      id={menuId}
-      keepMounted
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-    </Menu>
-  );
-
-  return (
-    <Box sx={{ flexGrow: 1 }}>
-      <ThemeProvider theme={theme}>
-        <AppBar position="fixed">
-          <Toolbar>
-            {/*  サイト名 */}
-            <Typography
-              variant="h6"
-              noWrap
-              component={Link}
-              to={"/product/list/"}
-              sx={{
-                display: {
-                  xs: "none",
-                  sm: "block",
-                  textDecoration: "none",
-                  color: "black",
-                },
-              }}
-            >
-              ECサイト（仮）
-            </Typography>
-            {/*  検索 */}
-            <Search>
-              <SearchIconWrapper>
-                <SearchIcon />
-              </SearchIconWrapper>
-              <StyledInputBase
-                placeholder="Search…"
-                inputProps={{ "aria-label": "search" }}
-              />
-            </Search>
-            <Box sx={{ flexGrow: 1 }} />
-            <Box sx={{ display: { xs: "none", md: "flex" } }}>
-              {/*  カートアイコン */}
-              <IconButton
-                size="large"
-                aria-label="show 4 new mails"
-                color="inherit"
-                onClick={() => history.push("/cart")}
-              >
-                <Badge badgeContent={getUserCartCnt.data} color="error">
-                  <ShoppingCartIcon />
-                </Badge>
-              </IconButton>
-              {/*  お気に入りアイコン */}
-              <IconButton
-                size="large"
-                aria-label="show 3 new notifications"
-                color="inherit"
-                onClick={() => history.push("/user/favoritelist/")}
-              >
-                <Badge badgeContent={getUserFavoriteCnt.data} color="error">
-                  <FavoriteIcon />
-                </Badge>
-              </IconButton>
-              {/*  アカウントアイコン */}
-              <IconButton
-                size="large"
-                edge="end"
-                aria-label="account of current user"
-                aria-controls={menuId}
-                aria-haspopup="true"
-                onClick={handleProfileMenuOpen}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
-            </Box>
-          </Toolbar>
-        </AppBar>
-        {renderMenu}
-      </ThemeProvider>
-    </Box>
-  );
-};
-
-export default Header;

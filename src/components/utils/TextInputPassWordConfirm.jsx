@@ -1,11 +1,12 @@
 import React from "react";
-import { useController } from "react-hook-form";
+import { useController, useFormContext } from "react-hook-form";
 import { TextField } from "@mui/material";
 
 const TextInputPassWordConfirm = (props) => {
+  const methods = useFormContext();
   const { field } = useController({
     name: props.name,
-    control: props.control,
+    control: methods.control,
     rules: {
       required: "パスワード（確認用）は必須です。",
       validate: (value) =>
@@ -25,14 +26,14 @@ const TextInputPassWordConfirm = (props) => {
       type="password"
       placeholder="パスワード（確認用）"
       error={
-        props.errors.passwordConfirm?.type === "required" ||
-        props.errors.passwordConfirm?.type === "validate"
+        methods.formState.errors.passwordConfirm?.type === "required" ||
+        methods.formState.errors.passwordConfirm?.type === "validate"
       }
       helperText={
-        (props.errors.passwordConfirm?.type === "required" &&
-          props.errors.passwordConfirm.message) ||
-        (props.errors.passwordConfirm?.type === "validate" &&
-          props.errors.passwordConfirm.message)
+        (methods.formState.errors.passwordConfirm?.type === "required" &&
+          methods.formState.errors.passwordConfirm.message) ||
+        (methods.formState.errors.passwordConfirm?.type === "validate" &&
+          methods.formState.errors.passwordConfirm.message)
       }
     />
   );

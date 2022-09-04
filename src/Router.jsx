@@ -10,6 +10,8 @@ import {
   FavoriteDetail,
   Cart,
   Chat,
+  MyProfile,
+  MyProfileForm,
 } from "./features/index";
 
 const Router = () => {
@@ -29,6 +31,12 @@ const Router = () => {
         <Route exact path="/user/favoritelist" component={FavoriteDetail} />
         <Route exact path="/cart" component={Cart} />
         <Route exact path="/chat/:groupID?" component={Chat} />
+        <Route exact path="/myAccount/myProfile" component={MyProfile} />
+        <Route
+          exact
+          path="/myAccount/myProfileForm"
+          component={MyProfileForm}
+        />
       </Auth>
       <Route path="*">{<div>ページが見つかりません！（簡易版）</div>}</Route>
     </Switch>

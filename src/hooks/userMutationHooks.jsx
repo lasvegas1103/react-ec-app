@@ -1,4 +1,5 @@
 import { useQueryClient } from "react-query";
+import { useHistory } from "react-router-dom";
 import { auth, db, FirebaseTimeStamp } from "../firebase/index";
 import {
   doc,
@@ -79,15 +80,15 @@ export const useSignUp = () => {
  * ログイン
  */
 export const useSignIn = () => {
-  const queryClient = useQueryClient();
+  const history = useHistory();
 
   // ログイン処理
   const signin = useMutationWrapper({
     func: (data) => signinAction(data),
     options: {
-      onSuccess: (res) => {
-        if (res.isSuccess)
-          queryClient.setQueryData(CacheName.USERDATA, res.userData);
+      onSuccess: () => {
+        // ログインに成功したら商品一覧画面に遷移
+        history.push("/product/list");
       },
     },
   });
@@ -100,14 +101,7 @@ export const useSignIn = () => {
         .then((result) => {
           const user = result.user;
           if (user) {
-            const uid = user.uid;
-
-            db.collection("users")
-              .doc(uid)
-              .get()
-              .then((userData) => {
-                resolve(userData.data());
-              });
+            resolve("ログイン成功！");
           } else {
             reject("ログインに失敗しました。再度ログインしてください。");
           }

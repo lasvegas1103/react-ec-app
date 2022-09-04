@@ -5,13 +5,13 @@ import { useAuthStateQuery } from "../../hooks/authHooks";
 const Auth = ({ children }) => {
   const history = useHistory();
   const queryClient = useQueryClient();
-  const { fetchUserData } = useAuthStateQuery();
+  const { getAuthState } = useAuthStateQuery();
 
   let loginData = {};
-  if (!fetchUserData.isLoading)
+  if (!getAuthState.isLoading)
     loginData = queryClient.getQueryData("loginData");
 
-  if (fetchUserData.isLoading) {
+  if (getAuthState.isLoading) {
     return <div></div>;
   }
 

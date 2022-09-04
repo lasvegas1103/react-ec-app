@@ -1,5 +1,4 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import { Button, Link, Typography } from "@mui/material";
 import HeaderLogOut from "../../components/utils/HeaderLogOut";
@@ -16,16 +15,15 @@ const CustomDiv = styled("div")({
   margin: "5% auto",
 });
 
+/**
+ * ログイン処理
+ * @returns
+ */
 const Signin = () => {
-  const history = useHistory();
   const { signin } = useSignIn();
 
   const onSubmit = (data) => {
     signin.mutate(data, {
-      onSuccess: () => {
-        // ログインに成功したら商品一覧画面に遷移
-        history.push("/product/list");
-      },
       onError: (errText) => {
         toast.error(errText);
       },

@@ -1,11 +1,12 @@
 import React from "react";
-import { useController } from "react-hook-form";
+import { useController, useFormContext } from "react-hook-form";
 import { TextField } from "@mui/material";
 
 const TextInputName = (props) => {
+  const methods = useFormContext();
   const { field } = useController({
     name: props.name,
-    control: props.control,
+    control: methods.control,
     rules: {
       required: "ニックネームを入力してください。",
       pattern: {
@@ -24,14 +25,14 @@ const TextInputName = (props) => {
       margin="normal"
       placeholder="ニックネームを入力してください。"
       error={
-        props.errors.username?.type === "required" ||
-        props.errors.username?.type === "pattern"
+        methods.formState.errors.username?.type === "required" ||
+        methods.formState.errors.username?.type === "pattern"
       }
       helperText={
-        (props.errors.username?.type === "required" &&
-          props.errors.username.message) ||
-        (props.errors.username?.type === "pattern" &&
-          props.errors.username.message)
+        (methods.formState.errors.username?.type === "required" &&
+          methods.formState.errors.username.message) ||
+        (methods.formState.errors.username?.type === "pattern" &&
+          methods.formState.errors.username.message)
       }
     />
   );

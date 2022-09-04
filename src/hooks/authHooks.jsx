@@ -8,22 +8,16 @@ import { CacheName } from "../config/constants";
  */
 export const useAuthStateQuery = () => {
   const history = useHistory();
-  const fetchUserData = useQueryWrapper({
+  const getAuthState = useQueryWrapper({
     queryKey: CacheName.LOGINDATA,
     deps: [],
-    func: () => getUserDataAction(),
+    func: () => getAuthStateAction(),
     options: {},
     errText: "ログイン情報取得に失敗しました",
   });
 
-  // ユーザーデータ取得
-  const getUserDataAction = async () => {
-    let authState = await getAuthState();
-    return authState;
-  };
-
   // firebaseからログイン状態を取得
-  const getAuthState = async () => {
+  const getAuthStateAction = async () => {
     return new Promise((resolve) => {
       auth.onAuthStateChanged((user) => {
         if (user) {
@@ -39,5 +33,5 @@ export const useAuthStateQuery = () => {
     });
   };
 
-  return { fetchUserData };
+  return { getAuthState };
 };

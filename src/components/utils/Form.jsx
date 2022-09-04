@@ -1,34 +1,34 @@
 import React from "react";
-import { useForm } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 
+/**
+ * react hook form のフォームコンポーネント
+ * @param {*} param0
+ * @returns
+ */
 const Form = ({ children, onSubmit }) => {
-  const {
-    handleSubmit,
-    control,
-    getValues,
-    setValue,
-    register,
-    formState: { errors },
-  } = useForm();
-
+  const methods = useForm();
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      {React.Children.map(children, (child) => {
-        return child.props.name
-          ? React.createElement(child.type, {
-              ...{
-                ...child.props,
-                key: child.props.name,
-                control,
-                errors,
-                getValues,
-                setValue,
-                register,
-              },
-            })
-          : child;
-      })}
-    </form>
+    <FormProvider {...methods}>
+      <form onSubmit={methods.handleSubmit(onSubmit)}>
+        {React.Children.map(children, (child) => {
+          return child.props.name
+            ? React.createElement(child.type, {
+                ...{
+                  ...child.props,
+                  key: child.props.name,
+                  // control,
+                  // errors,
+                  // getValues,
+                  // setValue,
+                  // register,
+                  ...methods,
+                },
+              })
+            : child;
+        })}
+      </form>
+    </FormProvider>
   );
 };
 
