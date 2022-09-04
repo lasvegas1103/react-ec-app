@@ -1,9 +1,10 @@
 import React from "react";
-import useUserData from "../../hooks/user/useUserData";
 import { useHistory } from "react-router-dom";
+import useUserData from "../../hooks/user/useUserData";
 import { styled } from "@mui/material/styles";
 import { Button, Typography, Link, Grid } from "@mui/material";
 import Form from "../../components/utils/Form";
+import CheckBoxForMyProfile from "../../components/myAccount/CheckBoxForMyProfile";
 import TextInputNameForMyProfile from "../../components/myAccount/TextInputNameForMyProfile";
 import Paper from "@mui/material/Paper";
 import Header from "../../components/utils/Header";
@@ -27,6 +28,9 @@ const MyProfileForm = () => {
   }
   const userData = getUserData.data;
 
+  const handleSubmit = () => {
+    console.log("test");
+  };
   return (
     <div>
       <BoxSx>
@@ -51,10 +55,10 @@ const MyProfileForm = () => {
               >
                 会員登録情報
               </Typography>
-              <TableContainer>
-                <Table>
-                  <TableBody>
-                    <Form>
+              <Form onSubmit={handleSubmit}>
+                <TableContainer>
+                  <Table>
+                    <TableBody>
                       {/** 名前 */}
                       <TableRow>
                         <TableCell component="th" scope="row">
@@ -64,27 +68,29 @@ const MyProfileForm = () => {
                           <TextInputNameForMyProfile name="name" />
                         </TableCell>
                       </TableRow>
-                      {/** メールアドレス */}
+                      {/** 性別 */}
                       <TableRow>
                         <TableCell component="th" scope="row">
-                          メールアドレス
+                          性別
+                        </TableCell>
+                        <TableCell>
+                          <CheckBoxForMyProfile name="gender" />
+                        </TableCell>
+                      </TableRow>
+                      {/** 住所 */}
+                      <TableRow>
+                        <TableCell component="th" scope="row">
+                          住所
                         </TableCell>
                         <TableCell>基本情報詳細</TableCell>
                       </TableRow>
-                      {/** パスワード */}
-                      <TableRow>
-                        <TableCell component="th" scope="row">
-                          パスワード
-                        </TableCell>
-                        <TableCell>基本情報詳細</TableCell>
-                      </TableRow>
-                      <Button variant="contained" color="primary" type="submit">
-                        ログイン
-                      </Button>
-                    </Form>
-                  </TableBody>
-                </Table>
-              </TableContainer>
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+                <Button variant="contained" color="primary" type="submit">
+                  ログイン
+                </Button>
+              </Form>
             </StyledPaper>
           </Grid>
         </Grid>

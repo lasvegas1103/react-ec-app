@@ -17,11 +17,6 @@ const Form = ({ children, onSubmit }) => {
                 ...{
                   ...child.props,
                   key: child.props.name,
-                  // control,
-                  // errors,
-                  // getValues,
-                  // setValue,
-                  // register,
                   ...methods,
                 },
               })

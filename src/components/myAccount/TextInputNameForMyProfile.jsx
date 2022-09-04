@@ -1,5 +1,5 @@
 import React from "react";
-import { useController } from "react-hook-form";
+import { useController, useFormContext } from "react-hook-form";
 import { TextField } from "@mui/material";
 
 /**
@@ -8,13 +8,14 @@ import { TextField } from "@mui/material";
  * @returns
  */
 const TextInputNameForMyProfile = (props) => {
+  const methods = useFormContext();
   const { field } = useController({
     name: props.name,
-    control: props.control,
+    control: methods.control,
     rules: {
       required: "名前を入力してください。",
       pattern: {
-        value: /^([^\x20-\x7ea-zA-Z0-9]{1,20})$/,
+        validate: (value) => value.length > 0,
         message: "20文字以内で入力してください。",
       },
     },
@@ -27,16 +28,16 @@ const TextInputNameForMyProfile = (props) => {
       label="名前入力してください。"
       fullWidth
       margin="normal"
-      placeholder="名前を入力してください。"
+      placeholder="名前"
       error={
-        props.errors.username?.type === "required" ||
-        props.errors.username?.type === "pattern"
+        methods.formState.errors.name?.type === "required" ||
+        methods.formState.errors.name?.type === "pattern"
       }
       helperText={
-        (props.errors.username?.type === "required" &&
-          props.errors.username.message) ||
-        (props.errors.username?.type === "pattern" &&
-          props.errors.username.message)
+        (methods.formState.errors.name?.type === "required" &&
+          methods.formState.errors.name.message) ||
+        (methods.formState.errors.name?.type === "pattern" &&
+          methods.formState.errors.name.message)
       }
     />
   );
