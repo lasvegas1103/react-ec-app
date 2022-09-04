@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { useController, useFormContext } from "react-hook-form";
 import { TextField } from "@mui/material";
 
@@ -7,10 +7,10 @@ import { TextField } from "@mui/material";
  * @param {*} props
  * @returns
  */
-const TextInputNameForMyProfile = (props) => {
+const TextInputNameForMyProfile = memo(({ name }) => {
   const methods = useFormContext();
   const { field } = useController({
-    name: props.name,
+    name: name,
     control: methods.control,
     rules: {
       required: "名前を入力してください。",
@@ -41,6 +41,5 @@ const TextInputNameForMyProfile = (props) => {
       }
     />
   );
-};
-
+});
 export default TextInputNameForMyProfile;

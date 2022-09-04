@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { useHistory } from "react-router-dom";
 import useUserData from "../../hooks/user/useUserData";
+import useSearchAddress from "../../hooks/myAccount/useSearchAddress";
 import { styled } from "@mui/material/styles";
 import { Button, Typography, Link, Grid } from "@mui/material";
 import Form from "../../components/utils/Form";
 import CheckBoxForMyProfile from "../../components/myAccount/CheckBoxForMyProfile";
 import TextInputNameForMyProfile from "../../components/myAccount/TextInputNameForMyProfile";
+import TextInputZipCodeForMyProfile from "../../components/myAccount/TextInputZipCodeForMyProfile";
 import Paper from "@mui/material/Paper";
 import Header from "../../components/utils/Header";
 import BoxSx from "../../components/MaterialUI/BoxSx";
@@ -21,6 +23,13 @@ import TableRow from "@mui/material/TableRow";
  * @returns
  */
 const MyProfileForm = () => {
+  // 郵便で住所検索hook
+  const { address, searchAddress } = useSearchAddress();
+
+  const handleSearchZipCodeClick = useCallback(() => {
+    // searchAddress()
+  });
+
   // ユーザー情報取得
   const { getUserData } = useUserData();
   if (getUserData.isLoading) {
@@ -31,6 +40,7 @@ const MyProfileForm = () => {
   const handleSubmit = () => {
     console.log("test");
   };
+
   return (
     <div>
       <BoxSx>
@@ -82,7 +92,9 @@ const MyProfileForm = () => {
                         <TableCell component="th" scope="row">
                           住所
                         </TableCell>
-                        <TableCell>基本情報詳細</TableCell>
+                        <TableCell>
+                          <TextInputZipCodeForMyProfile name="zipCode" />
+                        </TableCell>
                       </TableRow>
                     </TableBody>
                   </Table>
