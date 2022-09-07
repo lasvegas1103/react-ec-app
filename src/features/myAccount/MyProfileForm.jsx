@@ -5,18 +5,11 @@ import useSearchAddress from "../../hooks/myAccount/useSearchAddress";
 import { styled } from "@mui/material/styles";
 import { Button, Typography, Link, Grid } from "@mui/material";
 import Form from "../../components/utils/Form";
-import CheckBoxForMyProfile from "../../components/myAccount/CheckBoxForMyProfile";
-import TextInputNameForMyProfile from "../../components/myAccount/TextInputNameForMyProfile";
-import TextInputZipCodeForMyProfile from "../../components/myAccount/TextInputZipCodeForMyProfile";
+import MyProfileContainer from "../../components/myAccount/MyProfileContainer";
 import Paper from "@mui/material/Paper";
 import Header from "../../components/utils/Header";
 import BoxSx from "../../components/MaterialUI/BoxSx";
 import Title from "../../components/MaterialUI/Title";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableRow from "@mui/material/TableRow";
 
 /**
  * マイプロフィール（フォーム）
@@ -66,42 +59,7 @@ const MyProfileForm = () => {
                 会員登録情報
               </Typography>
               <Form onSubmit={handleSubmit}>
-                <TableContainer>
-                  <Table>
-                    <TableBody>
-                      {/** 名前 */}
-                      <TableRow>
-                        <TableCell component="th" scope="row">
-                          お名前
-                        </TableCell>
-                        <TableCell>
-                          <TextInputNameForMyProfile name="name" />
-                        </TableCell>
-                      </TableRow>
-                      {/** 性別 */}
-                      <TableRow>
-                        <TableCell component="th" scope="row">
-                          性別
-                        </TableCell>
-                        <TableCell>
-                          <CheckBoxForMyProfile name="gender" />
-                        </TableCell>
-                      </TableRow>
-                      {/** 住所 */}
-                      <TableRow>
-                        <TableCell component="th" scope="row">
-                          住所
-                        </TableCell>
-                        <TableCell>
-                          <TextInputZipCodeForMyProfile name="zipCode" />
-                        </TableCell>
-                      </TableRow>
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-                <Button variant="contained" color="primary" type="submit">
-                  ログイン
-                </Button>
+                <MyProfileContainer />
               </Form>
             </StyledPaper>
           </Grid>

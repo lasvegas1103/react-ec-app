@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import { useController, useFormContext } from "react-hook-form";
+import { useController } from "react-hook-form";
 import { TextField } from "@mui/material";
 
 /**
@@ -7,39 +7,42 @@ import { TextField } from "@mui/material";
  * @param {*} props
  * @returns
  */
-const TextInputNameForMyProfile = memo(({ name }) => {
-  const methods = useFormContext();
-  const { field } = useController({
-    name: name,
-    control: methods.control,
-    rules: {
-      required: "名前を入力してください。",
-      pattern: {
-        validate: (value) => value.length > 0,
-        message: "20文字以内で入力してください。",
+const TextInputNameForMyProfile = memo(
+  ({ name, control, formState }) => {
+    const { field } = useController({
+      name: name,
+      control: control,
+      rules: {
+        required: "名前を入力してください。",
+        pattern: {
+          validate: (value) => value.length > 0,
+          message: "20文字以内で入力してください。",
+        },
       },
-    },
-    defaultValue: "",
-  });
-
-  return (
-    <TextField
-      {...field}
-      label="名前入力してください。"
-      fullWidth
-      margin="normal"
-      placeholder="名前"
-      error={
-        methods.formState.errors.name?.type === "required" ||
-        methods.formState.errors.name?.type === "pattern"
-      }
-      helperText={
-        (methods.formState.errors.name?.type === "required" &&
-          methods.formState.errors.name.message) ||
-        (methods.formState.errors.name?.type === "pattern" &&
-          methods.formState.errors.name.message)
-      }
-    />
-  );
-});
+      defaultValue: "",
+    });
+    return (
+      <TextField
+        {...field}
+        label="名前入力してください。"
+        fullWidth
+        margin="normal"
+        placeholder="名前"
+        error={
+          formState.errors.name?.type === "required" ||
+          formState.errors.name?.type === "pattern"
+        }
+        helperText={
+          (formState.errors.name?.type === "required" &&
+            formState.errors.name.message) ||
+          (formState.errors.name?.type === "pattern" &&
+            formState.errors.name.message)
+        }
+      />
+    );
+  },
+  (prevProps, nextProps) => {
+    return prevProps.formState.isDirty === nextProps.formState.isDirty;
+  }
+);
 export default TextInputNameForMyProfile;

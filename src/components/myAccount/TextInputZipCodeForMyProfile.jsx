@@ -23,6 +23,10 @@ const TextInputZipCodeForMyProfile = memo(({ name, onClick }) => {
     defaultValue: "",
   });
 
+  const testClick = async () => {
+    const reult = await methods.trigger("zipCode");
+  };
+
   return (
     <div style={{ display: "flex" }}>
       <TextField
@@ -45,10 +49,7 @@ const TextInputZipCodeForMyProfile = memo(({ name, onClick }) => {
         component="button"
         variant="body2"
         underline="none"
-        onClick={(e) => {
-          console.log(e.stopPropagation);
-          console.info(methods.getValues("zipCode"));
-        }}
+        onClick={testClick}
         sx={{ marginLeft: "1rem" }}
       >
         郵便番号から住所を検索する
