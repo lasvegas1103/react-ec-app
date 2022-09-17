@@ -1,4 +1,4 @@
-import React, { memo, useState } from "react";
+import React, { memo } from "react";
 import { useController, useFormContext } from "react-hook-form";
 import { TextField, Link } from "@mui/material";
 
@@ -7,8 +7,7 @@ import { TextField, Link } from "@mui/material";
  * @param {*} props
  * @returns
  */
-const TextInputZipCodeForMyProfile = memo(({ name, onClick }) => {
-  const [zipCode, setZipCode] = useState("");
+const TextInputZipCodeForMyProfile = memo(({ name, searchAddress }) => {
   const methods = useFormContext();
   const { field } = useController({
     name: name,
@@ -23,8 +22,10 @@ const TextInputZipCodeForMyProfile = memo(({ name, onClick }) => {
     defaultValue: "",
   });
 
-  const testClick = async () => {
-    const reult = await methods.trigger("zipCode");
+  const handleClick = async (event) => {
+    event.preventDefault();
+    // 郵便番号から住所取得
+    await searchAddress(methods.getValues(name));
   };
 
   return (
@@ -49,7 +50,7 @@ const TextInputZipCodeForMyProfile = memo(({ name, onClick }) => {
         component="button"
         variant="body2"
         underline="none"
-        onClick={testClick}
+        onClick={handleClick}
         sx={{ marginLeft: "1rem" }}
       >
         郵便番号から住所を検索する

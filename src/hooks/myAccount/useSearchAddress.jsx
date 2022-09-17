@@ -6,16 +6,16 @@ import axios from "axios";
  * @param {*} param0
  */
 const useSearchAddress = () => {
-  const [address, setAddress] = useState([]);
+  const [address, setAddress] = useState("");
 
   const searchAddress = useCallback(async (zipCode) => {
     const { data } = await axios.get(
       `https://zipcloud.ibsnet.co.jp/api/search?zipcode=${zipCode}`
     );
-    // 取得に失敗したら返す
-    if (data.status !== "success") return;
 
-    setAddress(data.result);
+    // 取得に失敗したら返す
+    if (data.status !== 200) return;
+    setAddress(data.results[0]);
   }, []);
 
   return { address, searchAddress };

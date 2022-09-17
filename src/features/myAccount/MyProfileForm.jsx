@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { useHistory } from "react-router-dom";
 import useUserData from "../../hooks/user/useUserData";
 import useSearchAddress from "../../hooks/myAccount/useSearchAddress";
@@ -16,12 +16,9 @@ import Title from "../../components/MaterialUI/Title";
  * @returns
  */
 const MyProfileForm = () => {
+  // 都道府県のstate
   // 郵便で住所検索hook
   const { address, searchAddress } = useSearchAddress();
-
-  const handleSearchZipCodeClick = useCallback(() => {
-    // searchAddress()
-  });
 
   // ユーザー情報取得
   const { getUserData } = useUserData();
@@ -59,7 +56,10 @@ const MyProfileForm = () => {
                 会員登録情報
               </Typography>
               <Form onSubmit={handleSubmit}>
-                <MyProfileContainer />
+                <MyProfileContainer
+                  address={address}
+                  searchAddress={searchAddress}
+                />
               </Form>
             </StyledPaper>
           </Grid>
