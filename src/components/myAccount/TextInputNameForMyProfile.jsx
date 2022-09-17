@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 import { useController } from "react-hook-form";
-import { TextField } from "@mui/material";
+import { FormHelperText, TextField } from "@mui/material";
 
 /**
  * マイプロフィール（フォーム：名前）
@@ -13,31 +13,29 @@ const TextInputNameForMyProfile = memo(({ name, control, formState }) => {
     control: control,
     rules: {
       required: "名前を入力してください。",
-      pattern: {
-        validate: (value) => value.length > 0,
-        message: "20文字以内で入力してください。",
-      },
     },
     defaultValue: "",
   });
   return (
-    <TextField
-      {...field}
-      label="名前入力してください。"
-      fullWidth
-      margin="normal"
-      placeholder="名前"
-      error={
-        formState.errors.name?.type === "required" ||
-        formState.errors.name?.type === "pattern"
-      }
-      helperText={
-        (formState.errors.name?.type === "required" &&
-          formState.errors.name.message) ||
-        (formState.errors.name?.type === "pattern" &&
-          formState.errors.name.message)
-      }
-    />
+    <div>
+      <TextField
+        {...field}
+        label="例）山田太郎"
+        margin="normal"
+        placeholder="名前"
+        sx={{ backgroundColor: "white" }}
+        error={
+          formState.errors.name?.type === "required" ||
+          formState.errors.name?.type === "pattern"
+        }
+      />
+      {(formState.errors.name?.type === "required" ||
+        formState.errors.name?.type === "pattern") && (
+        <FormHelperText error={true}>
+          {formState.errors.name.message}
+        </FormHelperText>
+      )}
+    </div>
   );
 });
 export default TextInputNameForMyProfile;

@@ -8,4 +8,4 @@ export { default as FavoriteDetail } from "./favoriteDetail/FavoriteDetail";
 export { default as Cart } from "./cart/Cart";
 export { default as Chat } from "./chat/Chat";
 export { default as MyProfile } from "./myAccount/MyProfile";
-export { default as MyProfileForm } from "./myAccount/MyProfileForm";
+export { default as MyProfileEdit } from "./myAccount/MyProfileEdit";

@@ -11,7 +11,7 @@ import {
   Cart,
   Chat,
   MyProfile,
-  MyProfileForm,
+  MyProfileEdit,
 } from "./features/index";
 
 const Router = () => {
@@ -34,8 +34,8 @@ const Router = () => {
         <Route exact path="/myAccount/myProfile" component={MyProfile} />
         <Route
           exact
-          path="/myAccount/myProfileForm"
-          component={MyProfileForm}
+          path="/myAccount/MyProfileEdit"
+          component={MyProfileEdit}
         />
       </Auth>
       <Route path="*">{<div>ページが見つかりません！（簡易版）</div>}</Route>

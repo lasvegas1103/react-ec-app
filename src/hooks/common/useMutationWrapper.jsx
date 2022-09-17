@@ -5,17 +5,14 @@ import { useUtilContext } from "../../context/UtilContext";
 const useMutationWrapper = ({ func, options, errText = "" }) => {
   const { toast } = useUtilContext();
   const result = useMutation((variables) => {
-    try {
-      const data = func(variables);
-      data.catch((e) => {
+    const data = func(variables);
+    data
+      .then((data) => console.log(data))
+      .catch((e) => {
         toast.error(errText);
         console.error(e);
       });
-      return data;
-    } catch (e) {
-      toast.error(errText);
-      console.error(e);
-    }
+    return data;
   }, options);
   return result;
 };

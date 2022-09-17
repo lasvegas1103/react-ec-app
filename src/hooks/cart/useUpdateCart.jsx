@@ -24,8 +24,7 @@ export const useUpdateCart = () => {
       onSuccess: () => {
         queryClient.invalidateQueries(CacheName.USERCARTLIST);
       },
-      onError: (data) => {
-        console.log(data);
+      onError: () => {
         queryClient.invalidateQueries(CacheName.USERCARTLIST);
       },
     },

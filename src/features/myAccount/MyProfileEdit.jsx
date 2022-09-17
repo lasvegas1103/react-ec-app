@@ -1,11 +1,13 @@
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import useUserData from "../../hooks/user/useUserData";
 import useSearchAddress from "../../hooks/myAccount/useSearchAddress";
+import { useUpdateMyProfile } from "../../hooks/myAccount/useUpdateMyProfile";
 import { styled } from "@mui/material/styles";
-import { Button, Typography, Link, Grid } from "@mui/material";
+import { Typography, Grid } from "@mui/material";
 import Form from "../../components/utils/Form";
 import MyProfileContainer from "../../components/myAccount/MyProfileContainer";
+import MyProfileConfirm from "../../components/myAccount/MyProfileConfirm";
 import Paper from "@mui/material/Paper";
 import Header from "../../components/utils/Header";
 import BoxSx from "../../components/MaterialUI/BoxSx";
@@ -15,10 +17,13 @@ import Title from "../../components/MaterialUI/Title";
  * マイプロフィール（フォーム）
  * @returns
  */
-const MyProfileForm = () => {
-  // 都道府県のstate
+const MyProfileEdit = () => {
+  // 確認画面に切り替える制御
+  const [isConfirm, setIsConfirm] = useState(false);
   // 郵便で住所検索hook
   const { address, searchAddress } = useSearchAddress();
+  // マイプロフィール更新
+  const { updateMyProfile } = useUpdateMyProfile();
 
   // ユーザー情報取得
   const { getUserData } = useUserData();
@@ -27,8 +32,23 @@ const MyProfileForm = () => {
   }
   const userData = getUserData.data;
 
-  const handleSubmit = () => {
-    console.log("test");
+  const handleSubmit = (formData) => {
+    if (isConfirm) {
+      updateMyProfile.mutate(
+        {
+          uid: userData.uid,
+          formData: formData,
+        },
+        {
+          onSuccess: () => {
+            // 完了画面へ遷移
+          },
+        }
+      );
+    } else {
+      // 確認画面を表示
+      setIsConfirm(!isConfirm);
+    }
   };
 
   return (
@@ -56,10 +76,19 @@ const MyProfileForm = () => {
                 会員登録情報
               </Typography>
               <Form onSubmit={handleSubmit}>
-                <MyProfileContainer
-                  address={address}
-                  searchAddress={searchAddress}
-                />
+                {isConfirm ? (
+                  // 確認画面
+                  <MyProfileConfirm
+                    isConfirm={isConfirm}
+                    setIsConfirm={setIsConfirm}
+                  />
+                ) : (
+                  // フォーム画面
+                  <MyProfileContainer
+                    address={address}
+                    searchAddress={searchAddress}
+                  />
+                )}
               </Form>
             </StyledPaper>
           </Grid>
@@ -69,7 +98,7 @@ const MyProfileForm = () => {
   );
 };
 
-export default MyProfileForm;
+export default MyProfileEdit;
 
 /* CSS */
 const StyledPaper = styled(Paper)(({ theme }) => ({
@@ -77,6 +106,6 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(4),
   width: "80%",
   height: "auto",
-  color: theme.palette.text.secondary,
+  // color: theme.palette.text.secondary,
   backgroundColor: "#f0f0f0",
 }));
