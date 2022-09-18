@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
 import useUserData from "../../hooks/user/useUserData";
 import useSearchAddress from "../../hooks/myAccount/useSearchAddress";
 import { useUpdateMyProfile } from "../../hooks/myAccount/useUpdateMyProfile";
 import { styled } from "@mui/material/styles";
 import { Typography, Grid } from "@mui/material";
 import Form from "../../components/utils/Form";
-import MyProfileContainer from "../../components/myAccount/MyProfileContainer";
+import MyProfileForm from "../../components/myAccount/MyProfileForm";
 import MyProfileConfirm from "../../components/myAccount/MyProfileConfirm";
+import MyProfileDone from "../../components/myAccount/MyProfileDone";
 import Paper from "@mui/material/Paper";
 import Header from "../../components/utils/Header";
 import BoxSx from "../../components/MaterialUI/BoxSx";
@@ -20,6 +20,8 @@ import Title from "../../components/MaterialUI/Title";
 const MyProfileEdit = () => {
   // 確認画面に切り替える制御
   const [isConfirm, setIsConfirm] = useState(false);
+  // 完了画面に切り替える制御
+  const [isDone, setIsDone] = useState(false);
   // 郵便で住所検索hook
   const { address, searchAddress } = useSearchAddress();
   // マイプロフィール更新
@@ -41,7 +43,8 @@ const MyProfileEdit = () => {
         },
         {
           onSuccess: () => {
-            // 完了画面へ遷移
+            // 完了画面表示
+            setIsDone(!isDone);
           },
         }
       );
@@ -73,23 +76,28 @@ const MyProfileEdit = () => {
                   borderBottom: "solid 1px lightgray",
                 }}
               >
-                会員登録情報
+                {isConfirm ? "基本情報の変更" : "会員登録情報"}
               </Typography>
-              <Form onSubmit={handleSubmit}>
-                {isConfirm ? (
-                  // 確認画面
-                  <MyProfileConfirm
-                    isConfirm={isConfirm}
-                    setIsConfirm={setIsConfirm}
-                  />
-                ) : (
-                  // フォーム画面
-                  <MyProfileContainer
-                    address={address}
-                    searchAddress={searchAddress}
-                  />
-                )}
-              </Form>
+              {isDone ? (
+                // 完了画面
+                <MyProfileDone />
+              ) : (
+                <Form onSubmit={handleSubmit}>
+                  {isConfirm ? (
+                    // 確認画面
+                    <MyProfileConfirm
+                      isConfirm={isConfirm}
+                      setIsConfirm={setIsConfirm}
+                    />
+                  ) : (
+                    // フォーム画面
+                    <MyProfileForm
+                      address={address}
+                      searchAddress={searchAddress}
+                    />
+                  )}
+                </Form>
+              )}
             </StyledPaper>
           </Grid>
         </Grid>
@@ -106,6 +114,5 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(4),
   width: "80%",
   height: "auto",
-  // color: theme.palette.text.secondary,
   backgroundColor: "#f0f0f0",
 }));

@@ -1,8 +1,9 @@
 import { memo, useEffect } from "react";
+import { useQueryClient } from "react-query";
 import { useFormContext } from "react-hook-form";
-import CheckBoxForMyProfile from "../../components/myAccount/CheckBoxForMyProfile";
-import TextInputNameForMyProfile from "../../components/myAccount/TextInputNameForMyProfile";
-import TextInputZipCodeForMyProfile from "../../components/myAccount/TextInputZipCodeForMyProfile";
+import CheckBoxForMyProfile from "./CheckBoxForMyProfile";
+import TextInputNameForMyProfile from "./TextInputNameForMyProfile";
+import TextInputZipCodeForMyProfile from "./TextInputZipCodeForMyProfile";
 import InputPrefecturesForMyProfile from "./InputPrefecturesForMyProfile";
 import TextInputAddress1ForMyProfile from "./TextInputAddress1ForMyProfile";
 import TextInputAddress2ForMyProfile from "./TextInputAddress2ForMyProfile";
@@ -16,10 +17,23 @@ import TableRow from "@mui/material/TableRow";
 import { Button } from "@mui/material";
 
 /**
- * マイプロフィールメイン
+ * マイプロフィールメイン(フォーム)
  */
-const MyProfileContainer = memo(({ address, searchAddress }) => {
+const MyProfileForm = memo(({ address, searchAddress }) => {
+  const queryClient = useQueryClient();
   const methods = useFormContext();
+
+  useEffect(() => {
+    // すでに登録されている値を非同期でセットする
+    const userData = queryClient.getQueryData("userData");
+    methods.setValue("name", userData.name);
+    methods.setValue("gender", userData.gender);
+    methods.setValue("zipCode", userData.zipCode);
+    methods.setValue("prefecture", userData.prefecture);
+    methods.setValue("address1", userData.address1);
+    methods.setValue("address2", userData.address2);
+    methods.setValue("telNumber", userData.telNumber);
+  }, []);
 
   useEffect(() => {
     // 郵便番号から住所を検索したときは、非同期で値をセットする
@@ -27,10 +41,11 @@ const MyProfileContainer = memo(({ address, searchAddress }) => {
     if (address !== "") {
       prefectureName = address?.address1;
       address1 = address.address2 + address.address3;
+
+      methods.setValue("prefecture", prefectureName);
+      methods.setValue("address1", address1);
     }
-    methods.setValue("prefecture", prefectureName);
-    methods.setValue("address1", address1);
-  });
+  }, [address, methods]);
 
   return (
     <div>
@@ -115,7 +130,7 @@ const MyProfileContainer = memo(({ address, searchAddress }) => {
   );
 });
 
-export default MyProfileContainer;
+export default MyProfileForm;
 
 /* CSS */
 const StyledButton = styled(Button)(({ theme }) => ({

@@ -24,7 +24,7 @@ const InputPrefecturesForMyProfile = memo(({ name, control, formState }) => {
         margin="normal"
         placeholder="都道府県"
         sx={{ backgroundColor: "white" }}
-        inputProps={{ readonly: true }}
+        // inputProps={{ readonly: true }}
         error={formState.errors.prefecture?.type === "required"}
         disabled
       />

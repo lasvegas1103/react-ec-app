@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import React from "react";
+import { useHistory } from "react-router-dom";
 import useUserData from "../../hooks/user/useUserData";
 import { styled } from "@mui/material/styles";
 import { Grid, Typography } from "@mui/material";
@@ -12,9 +13,9 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
 import { Button } from "@mui/material";
-import SettingsIcon from "@mui/icons-material/Settings";
 
 const MyProfile = () => {
+  const history = useHistory();
   // ユーザー情報取得
   const { getUserData } = useUserData();
   if (getUserData.isLoading) {
@@ -54,14 +55,32 @@ const MyProfile = () => {
                       <TableCell component="th" scope="row">
                         基本情報
                       </TableCell>
-                      <TableCell>基本情報詳細</TableCell>
+                      <TableCell>
+                        {/** 名前 */}
+                        <StyledPForPRofile>{userData.name}</StyledPForPRofile>
+                        {/** 性別 */}
+                        <StyledPForPRofile>{userData.gender}</StyledPForPRofile>
+                        {/** 郵便番号 */}
+                        <StyledPForPRofile>
+                          〒{userData.zipCode}
+                        </StyledPForPRofile>
+                        {/** 住所１ */}
+                        <StyledPForPRofile>
+                          {userData.address1}
+                        </StyledPForPRofile>
+                        {/** 住所2 */}
+                        <StyledPForPRofile>
+                          {userData.address2}
+                        </StyledPForPRofile>
+                      </TableCell>
                       {/*  変更ボタン */}
                       <TableCell align="left">
                         <Button
                           variant="outlined"
                           size="small"
-                          startIcon={<SettingsIcon />}
-                          onClick={""}
+                          onClick={() =>
+                            history.push("/myAccount/MyProfileEdit/")
+                          }
                         >
                           変更
                         </Button>
@@ -75,12 +94,7 @@ const MyProfile = () => {
                       <TableCell>基本情報詳細</TableCell>
                       {/*  変更ボタン */}
                       <TableCell align="left">
-                        <Button
-                          variant="outlined"
-                          size="small"
-                          startIcon={<SettingsIcon />}
-                          onClick={""}
-                        >
+                        <Button variant="outlined" size="small" onClick={""}>
                           変更
                         </Button>
                       </TableCell>
@@ -93,12 +107,7 @@ const MyProfile = () => {
                       <TableCell>基本情報詳細</TableCell>
                       {/*  変更ボタン */}
                       <TableCell align="left">
-                        <Button
-                          variant="outlined"
-                          size="small"
-                          startIcon={<SettingsIcon />}
-                          onClick={""}
-                        >
+                        <Button variant="outlined" size="small" onClick={""}>
                           変更
                         </Button>
                       </TableCell>
@@ -139,4 +148,10 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
   height: "auto",
   color: theme.palette.text.secondary,
   backgroundColor: "#f0f0f0",
+}));
+
+const StyledPForPRofile = styled("p")(({ theme }) => ({
+  fontSize: "12px",
+  marginTop: "1px",
+  marginBottom: "1px",
 }));
