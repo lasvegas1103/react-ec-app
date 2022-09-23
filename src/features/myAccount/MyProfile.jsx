@@ -110,10 +110,16 @@ const MyProfile = () => {
                       <TableCell component="th" scope="row">
                         パスワード
                       </TableCell>
-                      <TableCell>基本情報詳細</TableCell>
+                      <TableCell>*******</TableCell>
                       {/*  変更ボタン */}
                       <TableCell align="left">
-                        <Button variant="outlined" size="small" onClick={""}>
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          onClick={() =>
+                            history.push("/myAccount/PasswordEdit/")
+                          }
+                        >
                           変更
                         </Button>
                       </TableCell>
@@ -134,7 +140,28 @@ const MyProfile = () => {
                   borderBottom: "solid 1px lightgray",
                 }}
               >
-                お届け先の追加
+                お届け先の追加・変更
+              </Typography>
+              <Typography component={"div"} variant={"body2"}>
+                追加したお届け先はありません。追加したお届け先はありません。
+              </Typography>
+            </StyledPaper>
+          </Grid>
+          {/** クレジットカードの変更 */}
+          <Grid item xs={12} sm={12} md={12}>
+            <StyledPaper elevation={3}>
+              {/** タイトル */}
+              <Typography
+                component={"div"}
+                variant={"h6"}
+                sx={{
+                  borderBottom: "solid 1px lightgray",
+                }}
+              >
+                クレジットカードの変更
+              </Typography>
+              <Typography component={"div"} variant={"body2"}>
+                クレジットカード登録はありません。
               </Typography>
             </StyledPaper>
           </Grid>

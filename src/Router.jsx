@@ -13,6 +13,7 @@ import {
   MyProfile,
   MyProfileEdit,
   MailAddressEdit,
+  PasswordEdit,
 } from "./features/index";
 
 const Router = () => {
@@ -43,6 +44,7 @@ const Router = () => {
           path="/myAccount/MyProfileEdit/"
           component={MyProfileEdit}
         />
+        <Route exact path="/myAccount/PasswordEdit/" component={PasswordEdit} />
       </Auth>
       <Route path="*">{<div>ページが見つかりません！（簡易版）</div>}</Route>
     </Switch>

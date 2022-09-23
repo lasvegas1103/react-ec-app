@@ -1,31 +1,28 @@
 import React, { useState } from "react";
 import useUserData from "../../hooks/user/useUserData";
-import useSearchAddress from "../../hooks/myAccount/useSearchAddress";
 import { useUpdateMyProfile } from "../../hooks/myAccount/useUpdateMyProfile";
 import { styled } from "@mui/material/styles";
 import { Typography, Grid } from "@mui/material";
 import Form from "../../components/utils/Form";
 import Edit from "../../components/myAccount/common/Edit";
 import Confirm from "../../components/myAccount/common/Confirm";
-import Done from "../../components/myAccount//common/Done";
-import MyProfileForm from "../../components/myAccount/myprofile/MyProfileForm";
-import MyProfileConfirm from "../../components/myAccount/myprofile/MyProfileConfirm";
+import Done from "../../components/myAccount/common/Done";
+import PasswordForm from "../../components/myAccount/password/PasswordForm";
+import PasswordConfirm from "../../components/myAccount/password/PasswordConfirm";
 import Paper from "@mui/material/Paper";
 import Header from "../../components/utils/Header";
 import BoxSx from "../../components/MaterialUI/BoxSx";
 import Title from "../../components/MaterialUI/Title";
 
 /**
- * マイプロフィール（フォーム）
+ * マイプロフィール（パスワード）
  * @returns
  */
-const MyProfileEdit = () => {
+const PasswordEdit = () => {
   // 確認画面に切り替える制御
   const [isConfirm, setIsConfirm] = useState(false);
   // 完了画面に切り替える制御
   const [isDone, setIsDone] = useState(false);
-  // 郵便で住所検索hook
-  const { address, searchAddress } = useSearchAddress();
   // マイプロフィール更新
   const { updateMyProfile } = useUpdateMyProfile();
 
@@ -78,7 +75,7 @@ const MyProfileEdit = () => {
                   borderBottom: "solid 1px lightgray",
                 }}
               >
-                {isConfirm ? "基本情報の変更" : "会員登録情報"}
+                {isConfirm ? "パスワードの変更" : "パスワードの変更"}
               </Typography>
               {isDone ? (
                 // 完了画面
@@ -88,15 +85,12 @@ const MyProfileEdit = () => {
                   {isConfirm ? (
                     // 確認画面
                     <Confirm isConfirm={isConfirm} setIsConfirm={setIsConfirm}>
-                      <MyProfileConfirm />
+                      <PasswordConfirm />
                     </Confirm>
                   ) : (
                     // フォーム画面
                     <Edit>
-                      <MyProfileForm
-                        address={address}
-                        searchAddress={searchAddress}
-                      />
+                      <PasswordForm />
                     </Edit>
                   )}
                 </Form>
@@ -109,7 +103,7 @@ const MyProfileEdit = () => {
   );
 };
 
-export default MyProfileEdit;
+export default PasswordEdit;
 
 /* CSS */
 const StyledPaper = styled(Paper)(({ theme }) => ({
