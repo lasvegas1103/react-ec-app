@@ -12,6 +12,7 @@ import {
   Chat,
   MyProfile,
   MyProfileEdit,
+  MailAddressEdit,
 } from "./features/index";
 
 const Router = () => {
@@ -34,7 +35,12 @@ const Router = () => {
         <Route exact path="/myAccount/myProfile" component={MyProfile} />
         <Route
           exact
-          path="/myAccount/MyProfileEdit"
+          path="/myAccount/MailAddressEdit/"
+          component={MailAddressEdit}
+        />
+        <Route
+          exact
+          path="/myAccount/MyProfileEdit/"
           component={MyProfileEdit}
         />
       </Auth>

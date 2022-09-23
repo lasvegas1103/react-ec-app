@@ -9,3 +9,4 @@ export { default as Cart } from "./cart/Cart";
 export { default as Chat } from "./chat/Chat";
 export { default as MyProfile } from "./myAccount/MyProfile";
 export { default as MyProfileEdit } from "./myAccount/MyProfileEdit";
+export { default as MailAddressEdit } from "./myAccount/MailAddressEdit";

@@ -52,7 +52,7 @@ const ProductList = () => {
           {data?.pages &&
             data.pages.map((page) =>
               page.productData.map((d) => (
-                <Grid item spacing={5} xs={6} sm={6} md={6} key={d.id}>
+                <Grid item xs={6} sm={6} md={6} key={d.id}>
                   <ProductCard productData={d} />
                 </Grid>
               ))

@@ -40,7 +40,6 @@ export const getChatMessageList = async ({ pageParam = 0, groupID }) => {
 
   // メッセージ取得
   prevVisible = prevVisible === null ? defaultCursor : prevVisible;
-  console.log(prevVisible);
   const q = query(
     chatRef,
     orderBy("registdate_at"),

@@ -15,7 +15,7 @@ export const CacheName = {
 };
 
 /* チャットメッセージ件数 */
-export const MessageCount = 10;
+export const MessageCount = 1000;
 
 /* マイプロフィール（都道府県） */
 export const PrefectureList = [

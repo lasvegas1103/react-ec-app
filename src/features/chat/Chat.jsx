@@ -35,6 +35,15 @@ const Chat = () => {
   }, [listenLatestChatMessage]);
 
   useEffect(() => {
+    // 最新のchatMessageリッスン
+    const unsubscribe = listenLatestChatMessage();
+
+    return () => {
+      // chatのリスナーデタッチ
+      unsubscribe();
+    };
+  }, [listenLatestChatMessage]);
+  useEffect(() => {
     // スクロール位置判定
     judgementScrollPosition();
 
@@ -43,22 +52,17 @@ const Chat = () => {
       // 過去のメッセージを取得
       if (hasPreviousPage) {
         fetchPreviousPage();
+        setTimeout(() => {
+          document.scrollingElement.scrollTop =
+            document.scrollingElement.clientHeight;
+        }, 500);
       }
     }
-
-    // 最新のchatMessageリッスン
-    const unsubscribe = listenLatestChatMessage();
-
-    return () => {
-      // chatのリスナーデタッチ
-      unsubscribe();
-    };
   }, [
     isScrollPosition,
+    judgementScrollPosition,
     fetchPreviousPage,
     hasPreviousPage,
-    judgementScrollPosition,
-    listenLatestChatMessage,
   ]);
 
   return (
@@ -68,10 +72,9 @@ const Chat = () => {
         {/* 初期表示のN件分表示 */}
         {data?.pages &&
           data.pages.map((page) =>
-            page.chatMessageData.map((data) => (
-              <div>
+            page.chatMessageData.map((data, index) => (
+              <div key={index}>
                 <div
-                  key={data.id}
                   className={`msg ${
                     data.userID === auth.currentUser.uid ? "sent" : "received"
                   }`}
@@ -95,7 +98,6 @@ const Chat = () => {
               </div>
             </div>
           ))}
-        <div ref={bottomRef} />
       </div>
       {/* メッセージ送信ボタン */}
       <SendMessage
@@ -105,6 +107,7 @@ const Chat = () => {
         sendChatMessage={sendChatMessage}
         getAndSaveBotMessage={getAndSaveBotMessage}
       />
+      <div ref={bottomRef} />
     </div>
   );
 };

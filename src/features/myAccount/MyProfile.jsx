@@ -91,10 +91,16 @@ const MyProfile = () => {
                       <TableCell component="th" scope="row">
                         メールアドレス
                       </TableCell>
-                      <TableCell>基本情報詳細</TableCell>
+                      <TableCell>{userData.loginId}</TableCell>
                       {/*  変更ボタン */}
                       <TableCell align="left">
-                        <Button variant="outlined" size="small" onClick={""}>
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          onClick={() =>
+                            history.push("/myAccount/MailAddressEdit/")
+                          }
+                        >
                           変更
                         </Button>
                       </TableCell>
