@@ -14,6 +14,10 @@ import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
 import { Button } from "@mui/material";
 
+/**
+ * マイプロフィールトップ
+ * @returns 
+ */
 const MyProfile = () => {
   const history = useHistory();
   // ユーザー情報取得

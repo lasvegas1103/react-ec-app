@@ -2,7 +2,11 @@ import React from "react";
 import { Typography } from "@mui/material";
 import SizeList from "../../components/product/SizeList";
 
-const ProductDetailMain = ({ productData, favoriteData }) => {
+/**
+ * 商品詳細画面（メイン）
+ * @returns
+ */
+const ProductDetailMain = ({ productData }) => {
   return (
     <>
       {/*  タイトル */}
@@ -32,10 +36,10 @@ const ProductDetailMain = ({ productData, favoriteData }) => {
       {/*  サイズ一覧 */}
       <SizeList productData={productData} />
       {/*  説明文 */}
-      <Typography variant="h6" gutterBottom>
+      <Typography variant="h6" gutterBottom component="div">
         アイテム説明
       </Typography>
-      <Typography variant="body1" gutterBottom>
+      <Typography variant="body1" gutterBottom sx={{ whiteSpace: "pre-line" }}>
         {productData.description}
       </Typography>
     </>

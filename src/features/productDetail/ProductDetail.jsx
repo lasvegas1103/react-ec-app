@@ -13,7 +13,10 @@ import SwiperCm from "../../components/product/SwiperCm";
 import ProductDetailMain from "../../components/product/ProductDetailMain";
 import CompanyTitle from "../../components/MaterialUI/CompanyTitle";
 
-/* 商品詳細画面 */
+/**
+ * 商品詳細画面（フレーム）
+ * @returns
+ */
 const ProductDetail = () => {
   const urlParams = useParams();
   // キャッシュからUID取得

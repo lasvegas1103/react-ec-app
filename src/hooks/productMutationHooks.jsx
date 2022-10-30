@@ -10,7 +10,6 @@ import { CacheName } from "../config/constants";
 export const useSaveProduct = () => {
   const queryClient = useQueryClient();
   const [productData, setProductData] = useState([]);
-  const [isSuccess, setIsSuccess] = useState(false);
   const productsRef = db.collection("products");
 
   // useMutationを使って商品情報を登録
@@ -18,14 +17,13 @@ export const useSaveProduct = () => {
     func: (data) => saveProductAction(data),
     options: {
       onSuccess: (res) => {
-        if (res.isSuccess)
-          queryClient.setQueryData(CacheName.PRODUCTDATA, res.productData);
+        queryClient.setQueryData(CacheName.PRODUCTDATA, res.productData);
       },
     },
   });
 
   // firestoreに登録
-  const saveProductAction = (props) => {
+  const saveProductAction = async (props) => {
     const timestamp = FirebaseTimeStamp.now();
     const data = {
       id: productsRef.doc().id,
@@ -44,14 +42,13 @@ export const useSaveProduct = () => {
       .doc(data.id)
       .set(data, { merge: true })
       .then(() => {
-        setIsSuccess(true);
         setProductData(productData);
       })
       .catch((error) => {
         throw new Error(error);
       });
 
-    return { productData, isSuccess };
+    return "登録完了！";
   };
 
   return { saveProduct };

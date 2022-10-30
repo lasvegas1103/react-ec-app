@@ -12,6 +12,7 @@ const TextInput = (props) => {
   });
   return (
     <TextField
+      sx={{ whiteSpace: "pre-line" }}
       {...field}
       id="standard-basic"
       variant="standard"

@@ -4,7 +4,7 @@ import { useInView } from "react-intersection-observer";
 import useInfiniteQueryProductList from "../../hooks/useInfiniteQueryProductList";
 import useChatQuery from "../../hooks/chat/useChatQuery";
 import ProductCard from "../../components/product/ProductCard";
-import { Grid, Typography } from "@mui/material";
+import { Grid } from "@mui/material";
 import Header from "../../components/utils/Header";
 import BoxSx from "../../components/MaterialUI/BoxSx";
 import ModalCm from "../../components/MaterialUI/ModalCm";

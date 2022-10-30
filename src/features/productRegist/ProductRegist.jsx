@@ -10,19 +10,6 @@ import { useSaveProduct } from "../../hooks/productMutationHooks";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const Ccontainer = styled("div")({
-  margin: "0 auto",
-  maxWidth: "400px",
-  padding: "1rem",
-  height: "auto",
-  width: "calc(100% - 2rem)",
-});
-
-const Ctitle = styled("div")({
-  textAlign: "center",
-  fontSize: "1rem",
-});
-
 const categories = [
   {
     key: "トップス",
@@ -30,7 +17,7 @@ const categories = [
   },
   {
     key: "パンツ",
-    value: "ジャケット",
+    value: "パンツ",
   },
 ];
 
@@ -48,6 +35,10 @@ const sex = [
     value: "ユニセックス",
   },
 ];
+/**
+ * 商品の登録
+ * @returns
+ */
 const ProductRegist = () => {
   const { saveProduct } = useSaveProduct();
   const [images, setImages] = useState([]);
@@ -63,8 +54,7 @@ const ProductRegist = () => {
     data.sizes = sizes;
     data.images = images;
     saveProduct.mutate(data, {
-      onSuccess: (res) => {},
-      onError: (res) => {
+      onError: () => {
         toast.error("商品の登録に失敗しました");
       },
     });
@@ -154,3 +144,16 @@ const ProductRegist = () => {
 };
 
 export default ProductRegist;
+
+const Ccontainer = styled("div")({
+  margin: "0 auto",
+  maxWidth: "400px",
+  padding: "1rem",
+  height: "auto",
+  width: "calc(100% - 2rem)",
+});
+
+const Ctitle = styled("div")({
+  textAlign: "center",
+  fontSize: "1rem",
+});
