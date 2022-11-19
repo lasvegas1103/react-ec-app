@@ -86,7 +86,7 @@ export const useUserFavCntQuery = (props) => {
     );
     const querySnapshot = await getDocs(q);
     let favCnt = 0;
-    querySnapshot.forEach((doc) => {
+    querySnapshot.forEach(() => {
       favCnt++;
     });
     return favCnt;

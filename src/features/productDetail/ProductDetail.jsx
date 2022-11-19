@@ -67,9 +67,9 @@ const ProductDetail = () => {
             <Grid
               container
               columnSpacing={2}
-              sx={{ width: "90%", margin: "0 auto" }}
+              sx={{ width: "80%", margin: "0 auto" }}
             >
-              <Grid item xs={6}>
+              <Grid item xs={6} sx={{ margin: "auto" }}>
                 <div>
                   {/*  画像 */}
                   <SwiperCm images={fetchProductDetail.data.images} />

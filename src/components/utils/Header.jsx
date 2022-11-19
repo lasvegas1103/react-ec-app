@@ -10,7 +10,6 @@ import InputBase from "@mui/material/InputBase";
 import Badge from "@mui/material/Badge";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
-import SearchIcon from "@mui/icons-material/Search";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
@@ -18,6 +17,7 @@ import { useQueryClient } from "react-query";
 import { useUserFavCntQuery } from "../../hooks/userHooks";
 import { useUserCartCntQuery } from "../../hooks/userHooks";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
+import AlgoliaInstantSearch from "../../algolia/Algolia";
 
 /**
  * ヘッダー（ログイン）
@@ -86,15 +86,7 @@ const Header = () => {
               ECサイト（仮）
             </Typography>
             {/*  検索 */}
-            <Search>
-              <SearchIconWrapper>
-                <SearchIcon />
-              </SearchIconWrapper>
-              <StyledInputBase
-                placeholder="検索…"
-                inputProps={{ "aria-label": "search" }}
-              />
-            </Search>
+            <AlgoliaInstantSearch />
             <Box sx={{ flexGrow: 1 }} />
             <Box sx={{ display: { xs: "none", sm: "flex", md: "flex" } }}>
               {/*  カートアイコン */}
