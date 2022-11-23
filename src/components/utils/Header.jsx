@@ -1,5 +1,9 @@
 import React, { useState } from "react";
 import { useHistory, Link } from "react-router-dom";
+import { SearchBox } from "react-instantsearch-hooks-web";
+import { useQueryClient } from "react-query";
+import { useUserFavCntQuery } from "../../hooks/userHooks";
+import { useUserCartCntQuery } from "../../hooks/userHooks";
 import { styled, alpha } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -13,11 +17,7 @@ import Menu from "@mui/material/Menu";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { useQueryClient } from "react-query";
-import { useUserFavCntQuery } from "../../hooks/userHooks";
-import { useUserCartCntQuery } from "../../hooks/userHooks";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import AlgoliaInstantSearch from "../../algolia/Algolia";
 
 /**
  * ヘッダー（ログイン）
@@ -86,7 +86,7 @@ const Header = () => {
               ECサイト（仮）
             </Typography>
             {/*  検索 */}
-            <AlgoliaInstantSearch />
+            <SearchBox searchAsYouType={false} />
             <Box sx={{ flexGrow: 1 }} />
             <Box sx={{ display: { xs: "none", sm: "flex", md: "flex" } }}>
               {/*  カートアイコン */}

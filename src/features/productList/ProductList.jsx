@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useLocation } from "react-router-dom";
-import { useInView } from "react-intersection-observer";
-import useInfiniteQueryProductList from "../../hooks/useInfiniteQueryProductList";
+import { useHits } from "react-instantsearch-hooks-web";
 import useChatQuery from "../../hooks/chat/useChatQuery";
 import ProductCard from "../../components/product/ProductCard";
 import { Grid } from "@mui/material";
@@ -10,6 +9,7 @@ import BoxSx from "../../components/MaterialUI/BoxSx";
 import ModalCm from "../../components/MaterialUI/ModalCm";
 import FloatingActionButton from "../../components/MaterialUI/FloatingActionButton";
 import Title from "../../components/MaterialUI/Title";
+import CustomPagination from "../../components/algolia/CustomPagination";
 
 /**
  * 商品一覧画面
@@ -20,16 +20,14 @@ const ProductList = () => {
   const queryString = new URLSearchParams(search);
   const isSignup = queryString.get("isSignup");
 
-  const { ref, inView } = useInView();
-  const { data, isFetchingNextPage, hasNextPage, fetchNextPage } =
-    useInfiniteQueryProductList();
-
   // chatのgroupID取得
   const { getGroupID } = useChatQuery();
 
-  useEffect(() => {
-    if (inView && hasNextPage) fetchNextPage();
-  }, [inView]);
+  // algoliaからヒットした商品を検索
+  const { results } = useHits();
+  if (results.nbHits === 0) {
+    return <div>商品がありません</div>;
+  }
 
   return (
     <div>
@@ -49,16 +47,14 @@ const ProductList = () => {
           columnSpacing={2}
           sx={{ width: "90%", margin: "0 auto" }}
         >
-          {data?.pages &&
-            data.pages.map((page) =>
-              page.productData.map((d) => (
-                <Grid item xs={6} sm={6} md={6} key={d.id}>
-                  <ProductCard productData={d} />
-                </Grid>
-              ))
-            )}
+          {results.hits.map((hit) => (
+            <Grid item xs={6} sm={6} md={6} key={hit.id}>
+              <ProductCard productData={hit} />
+            </Grid>
+          ))}
         </Grid>
-        <div ref={ref}>{isFetchingNextPage && "Loading..."}</div>
+        {/** ページネーション */}
+        <CustomPagination />
       </BoxSx>
       {/** チャットbot */}
       {getGroupID.status === "success" && (

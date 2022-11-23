@@ -4,6 +4,7 @@ import Router from "./Router";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { UtilProvider } from "./context/UtilContext";
+import AlgoliaInstantSearch from "./components/algolia/Algolia";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -18,14 +19,16 @@ const queryClient = new QueryClient({
 
 const App = () => {
   return (
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <UtilProvider>
-          <Router />
-          <ReactQueryDevtools />
-        </UtilProvider>
-      </BrowserRouter>
-    </QueryClientProvider>
+    <AlgoliaInstantSearch>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <UtilProvider>
+            <Router />
+            <ReactQueryDevtools />
+          </UtilProvider>
+        </BrowserRouter>
+      </QueryClientProvider>
+    </AlgoliaInstantSearch>
   );
 };
 
