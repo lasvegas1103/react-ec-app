@@ -10,8 +10,12 @@ const algoliaClient = algoliasearch(appID, apiKey);
  */
 const AlgoliaInstantSearch = ({ children }) => {
   return (
-    <InstantSearch searchClient={algoliaClient} indexName={indexName}>
-      <Configure hitsPerPage={10} />
+    <InstantSearch
+      searchClient={algoliaClient}
+      indexName={indexName}
+      routing={true}
+    >
+      <Configure hitsPerPage={50} />
       {children}
     </InstantSearch>
   );
