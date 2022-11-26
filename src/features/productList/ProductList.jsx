@@ -25,9 +25,6 @@ const ProductList = () => {
 
   // algoliaからヒットした商品を検索
   const { results } = useHits();
-  if (results.nbHits === 0) {
-    return <div>商品がありません</div>;
-  }
 
   return (
     <div>
@@ -47,11 +44,15 @@ const ProductList = () => {
           columnSpacing={2}
           sx={{ width: "90%", margin: "0 auto" }}
         >
-          {results.hits.map((hit) => (
-            <Grid item xs={6} sm={6} md={6} key={hit.id}>
-              <ProductCard productData={hit} />
-            </Grid>
-          ))}
+          {results.nbHits === 0 ? (
+            <div>商品がありません</div>
+          ) : (
+            results.hits.map((hit) => (
+              <Grid item xs={6} sm={6} md={6} key={hit.id}>
+                <ProductCard productData={hit} />
+              </Grid>
+            ))
+          )}
         </Grid>
         {/** ページネーション */}
         <CustomPagination />
