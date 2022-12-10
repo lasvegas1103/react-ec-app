@@ -4,6 +4,7 @@ import { useInstantSearch } from "react-instantsearch-hooks-web";
 import { useQueryClient } from "react-query";
 import { useUserFavCntQuery } from "../../hooks/userHooks";
 import { useUserCartCntQuery } from "../../hooks/userHooks";
+import { getAuth, signOut } from "firebase/auth";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -53,6 +54,18 @@ const Header = () => {
     history.push("/product/list/");
   };
 
+  // ログアウト処理
+  const handleClickLogOut = () => {
+    const auth = getAuth();
+    signOut(auth)
+      .then(() => {
+        history.push("/signin/");
+      })
+      .catch((err) => {
+        throw new Error(err);
+      });
+  };
+
   const menuId = "primary-search-account-menu";
   // プロフィールメニュー
   const renderMenu = (
@@ -66,7 +79,7 @@ const Header = () => {
       <MenuItem onClick={() => history.push("/myAccount/myProfile")}>
         登録情報
       </MenuItem>
-      <MenuItem onClick={handleMenuClose}>ログアウト</MenuItem>
+      <MenuItem onClick={handleClickLogOut}>ログアウト</MenuItem>
     </Menu>
   );
 

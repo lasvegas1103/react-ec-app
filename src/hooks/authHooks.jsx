@@ -13,11 +13,10 @@ export const useAuthStateQuery = () => {
     deps: [],
     func: () => getAuthStateAction(),
     options: {},
-    errText: "ログイン情報取得に失敗しました",
   });
 
   // firebaseからログイン状態を取得
-  const getAuthStateAction = async () => {
+  const getAuthStateAction = () => {
     return new Promise((resolve) => {
       auth.onAuthStateChanged((user) => {
         if (user) {

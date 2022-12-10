@@ -1,5 +1,9 @@
 import { useQueryClient } from "react-query";
-import { useHistory } from "react-router-dom";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { auth, db, FirebaseTimeStamp } from "../firebase/index";
 import {
   doc,
@@ -16,6 +20,7 @@ import { CacheName } from "../config/constants";
 
 /**
  * 会員登録
+ * @returns {string} 会員登録成功
  */
 export const useSignUp = () => {
   const queryClient = useQueryClient();
@@ -29,91 +34,59 @@ export const useSignUp = () => {
       },
     },
   });
+  // ユーザーデータ登録（会員登録処理）
+  const signupAction = async ({ loginId, password, username }) => {
+    const auth = getAuth();
+    return await createUserWithEmailAndPassword(auth, loginId, password)
+      .then(async (userCredential) => {
+        const user = userCredential.user;
+        if (user) {
+          const uid = user.uid;
+          const timestamp = FirebaseTimeStamp.now();
+          const userInitialData = {
+            uid: uid,
+            username: username,
+            loginId: loginId,
+            role: "customer",
+            created_at: timestamp,
+            update_at: timestamp,
+          };
 
-  // ユーザーデータ登録（会員登録）
-  const signupAction = (props) => {
-    return new Promise((resolve, reject) => {
-      auth
-        .createUserWithEmailAndPassword(props.loginId, props.password)
-        .then((result) => {
-          const user = result.user;
-          if (user) {
-            const uid = user.uid;
-            const timestamp = FirebaseTimeStamp.now();
-
-            let userInitialData = {
-              uid: uid,
-              username: props.username,
-              loginId: props.loginId,
-              role: "customer",
-              created_at: timestamp,
-              update_at: timestamp,
-            };
-
-            db.collection("users")
-              .doc(uid)
-              .set(userInitialData)
-              .then(() => {
-                resolve(userInitialData);
-              })
-              .catch((error) => {
-                auth.currentUser.delete().then(() => {
-                  console.log(error);
-                  reject(
-                    "会員登録に失敗しました。再度会員登録をしてください。"
-                  );
-                });
-              });
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-          reject("会員登録に失敗しました。再度会員登録をしてください。");
-        });
-    });
+          // ユーザーデータ登録
+          await setDoc(doc(db, "users", uid), userInitialData);
+          return "会員登録に成功！";
+        }
+      })
+      .catch((err) => {
+        throw new Error("会員登録に失敗しました。再度会員登録をしてください。");
+      });
   };
-
   return { signup };
 };
 
 /**
- * ログイン
+ * ログイン処理
+ * @returns {string} ログイン失敗有無
  */
 export const useSignIn = () => {
-  const history = useHistory();
-
-  // ログイン処理
   const signin = useMutationWrapper({
     func: (data) => signinAction(data),
-    options: {
-      onSuccess: () => {
-        // ログインに成功したら商品一覧画面に遷移
-        history.push("/product/list");
-      },
-    },
   });
 
-  // サインイン
-  const signinAction = (props) => {
-    return new Promise((resolve, reject) => {
-      auth
-        .signInWithEmailAndPassword(props.loginId, props.password)
-        .then((result) => {
-          const user = result.user;
-          if (user) {
-            resolve("ログイン成功！");
-          } else {
-            reject("ログインに失敗しました。再度ログインしてください。");
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-          console.log(error.message);
-          reject("ログインに失敗しました。再度ログインしてください。");
-        });
-    });
+  const signinAction = async ({ loginId, password }) => {
+    return await signInWithEmailAndPassword(auth, loginId, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        if (user) {
+          return "ログイン成功！";
+        } else {
+          throw new Error("ログインに失敗しました");
+        }
+      })
+      .catch((err) => {
+        throw new Error("ログインに失敗しました");
+      });
   };
-
   return { signin };
 };
 

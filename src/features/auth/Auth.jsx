@@ -2,6 +2,11 @@ import { useHistory } from "react-router-dom";
 import { useQueryClient } from "react-query";
 import { useAuthStateQuery } from "../../hooks/authHooks";
 
+/**
+ * ログイン処理
+ * @param children
+ * @returns children
+ */
 const Auth = ({ children }) => {
   const history = useHistory();
   const queryClient = useQueryClient();

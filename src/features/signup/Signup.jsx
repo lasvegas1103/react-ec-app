@@ -13,18 +13,17 @@ import { useSignUp } from "../../hooks/userMutationHooks";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const CustomDiv = styled("div")({
-  textAlign: "center",
-  margin: "5% auto",
-});
-
-const Signup = () => {
+/**
+ * 会員登録画面
+ * @returns 会員登録画面
+ */
+export default function Signup() {
   const history = useHistory();
   const { signup } = useSignUp();
 
   const onSubmit = (data) => {
     signup.mutate(data, {
-      onSuccess: (res) => {
+      onSuccess: () => {
         // 会員登録が成功したら、商品一覧画面に遷移
         history.push("/product/list/?isSignup=true");
       },
@@ -36,7 +35,7 @@ const Signup = () => {
   };
 
   return (
-    <>
+    <div>
       <HeaderLogOut />
       <BoxMid>
         <Typography variant="h5" color="textSecondary" component="div">
@@ -48,20 +47,24 @@ const Signup = () => {
           <TextInputLoginId name="loginId" />
           <TextInputPassWord name="password" />
           <TextInputPassWordConfirm name="passwordConfirm" />
-          <CustomDiv>
+          <CustomWrapper>
             <Button variant="contained" color="primary" type="submit">
               登録
             </Button>
-          </CustomDiv>
-          <CustomDiv>
+          </CustomWrapper>
+          <CustomWrapper>
             <Link href="/signin" underline="none">
               ログインはこちら
             </Link>
-          </CustomDiv>
+          </CustomWrapper>
         </Form>
       </BoxMid>
-    </>
+    </div>
   );
 };
 
-export default Signup;
+/** CSS */
+const CustomWrapper = styled("div")({
+  textAlign: "center",
+  margin: "5% auto",
+});

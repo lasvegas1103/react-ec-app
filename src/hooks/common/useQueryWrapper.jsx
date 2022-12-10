@@ -1,7 +1,15 @@
 import { useQuery } from "react-query";
 import { useUtilContext } from "../../context/UtilContext";
 
-/* useQueryのwrapper関数 */
+/**
+ * useQueryのwrapperコンポーネント
+ * @param {string} queryKey
+ * @param {array} deps
+ * @param {関数} func
+ * @param {object} options
+ * @param {string} errText
+ * @returns 結果
+ */
 const useQueryWrapper = ({
   queryKey,
   deps = [],
@@ -16,11 +24,10 @@ const useQueryWrapper = ({
     async () => {
       try {
         const result = await func();
-
         return result;
-      } catch (e) {
-        toast.error(errText);
-        console.error(e);
+      } catch (err) {
+        toast.error(err.message);
+        console.error(err);
       }
     },
     options

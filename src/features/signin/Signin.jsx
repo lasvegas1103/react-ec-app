@@ -1,4 +1,5 @@
 import React from "react";
+import { useHistory } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import { Button, Link, Typography } from "@mui/material";
 import HeaderLogOut from "../../components/utils/HeaderLogOut";
@@ -7,31 +8,28 @@ import Form from "../../components/utils/Form";
 import TextInputLoginId from "../../components/utils/TextInputLoginId";
 import TextInputPassWord from "../../components/utils/TextInputPassWord";
 import { useSignIn } from "../../hooks/userMutationHooks";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const CustomDiv = styled("div")({
-  textAlign: "center",
-  margin: "5% auto",
-});
-
 /**
- * ログイン処理
- * @returns
+ * ログイン画面
+ * @returns ログインコンポーネント
  */
-const Signin = () => {
+export default function Signin() {
+  const history = useHistory();
   const { signin } = useSignIn();
 
   const onSubmit = (data) => {
     signin.mutate(data, {
-      onError: (errText) => {
-        toast.error(errText);
+      onSuccess: () => {
+        // ログインに成功したら商品一覧画面に遷移
+        history.push("/product/list");
       },
     });
   };
 
   return (
-    <>
+    <div>
       <HeaderLogOut />
       <BoxMid>
         <Typography variant="h5" color="textSecondary" component="div">
@@ -58,8 +56,12 @@ const Signin = () => {
           </CustomDiv>
         </Form>
       </BoxMid>
-    </>
+    </div>
   );
-};
+}
 
-export default Signin;
+/** CSS */
+const CustomDiv = styled("div")({
+  textAlign: "center",
+  margin: "5% auto",
+});
