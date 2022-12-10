@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSearchBox } from "react-instantsearch-hooks-web";
 import SearchIcon from "@mui/icons-material/Search";
 import { styled, alpha } from "@mui/material/styles";
@@ -26,6 +26,10 @@ export default function CustomSearchBox() {
   const handleOnChange = (e) => {
     setValue(e.currentTarget.value);
   };
+
+  useEffect(() => {
+    setValue(query);
+  }, [query]);
 
   return (
     <div style={{ position: "relative", display: "flex" }}>

@@ -14,7 +14,6 @@ import { Link } from "react-router-dom";
  * @returns　商品情報のコマ
  */
 const ProductCard = ({ productData }) => {
-  console.log(productData);
   return (
     <Card>
       <CardActionArea component={Link} to={`/product/detail/${productData.id}`}>

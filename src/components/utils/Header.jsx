@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useHistory, Link } from "react-router-dom";
-import { SearchBox } from "react-instantsearch-hooks-web";
+import { useInstantSearch } from "react-instantsearch-hooks-web";
 import { useQueryClient } from "react-query";
 import { useUserFavCntQuery } from "../../hooks/userHooks";
 import { useUserCartCntQuery } from "../../hooks/userHooks";
@@ -31,6 +31,8 @@ const Header = () => {
   const { getUserFavoriteCnt } = useUserFavCntQuery({ uid: loginData?.uid });
   // カート件数取得
   const { getUserCartCnt } = useUserCartCntQuery({ uid: loginData?.uid });
+  // algolia
+  const { setUiState } = useInstantSearch();
 
   const [anchorEl, setAnchorEl] = useState(null);
   const isMenuOpen = Boolean(anchorEl);
@@ -43,6 +45,12 @@ const Header = () => {
   // プロフィールメニュー > メニューを閉じる
   const handleMenuClose = () => {
     setAnchorEl(null);
+  };
+
+  // ロゴからトップページへ遷移
+  const handleTopPageClick = () => {
+    setUiState({}); // 検索結果リセット
+    history.push("/product/list/");
   };
 
   const menuId = "primary-search-account-menu";
@@ -72,7 +80,7 @@ const Header = () => {
               variant="h6"
               noWrap
               component={Link}
-              to={"/product/list/"}
+              // to={"/product/list/"}
               sx={{
                 display: {
                   xs: "none",
@@ -81,6 +89,7 @@ const Header = () => {
                   color: "black",
                 },
               }}
+              onClick={handleTopPageClick}
             >
               ECサイト（仮）
             </Typography>

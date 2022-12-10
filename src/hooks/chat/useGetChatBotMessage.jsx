@@ -1,7 +1,7 @@
 import { useCallback } from "react";
-import { db, FirebaseTimeStamp, auth } from "../../firebase";
+import { db, FirebaseTimeStamp } from "../../firebase";
 import { collection, addDoc } from "firebase/firestore";
-import axios from "axios";
+import { getFunctions, httpsCallable } from "firebase/functions";
 
 /**
  * botメッセージを取得＆保存
@@ -9,10 +9,13 @@ import axios from "axios";
  */
 const useGetChatBotMessage = () => {
   const getAndSaveBotMessage = useCallback(async ({ chatMessage, groupID }) => {
-    const apiKey = "83d064c4352c86fa8ab0";
-    const { data } = await axios.get(
-      `https://chatbot-api.userlocal.jp/api/chat?message=${chatMessage}&key=${apiKey}`
-    );
+    // firebase cloudfunctions
+    let data;
+    const functions = getFunctions();
+    const getChatbotMessage = httpsCallable(functions, "getChatbotMessage");
+    await getChatbotMessage(chatMessage).then((result) => {
+      data = result.data.message;
+    });
 
     // 取得に失敗したら返す
     if (data.status !== "success") return;
